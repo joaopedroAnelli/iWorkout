@@ -1,24 +1,31 @@
 //
-//  a.swift
+//  ExerciseModel.swift
 //  iWorkout
 //
-//  Created by João Anelli on 6/3/25.
+//  Created by OpenAI on 2023.
 //
 
 import Foundation
 
 class ExerciseModel: ObservableObject {
-    @Published var list: [String] = ["Agachamento", "Flexão", "Abdominal", "Levantamento Terra"]
-    
+    @Published var list: [Exercise] = Exercise.exemplo {
+        didSet {
+            enviarListaParaWatch()
+        }
+    }
+
     init() {
-            // Sempre que a lista mudar, envie pro Watch
-            SharedData.shared.list = list
-            SharedData.shared.enviarLista(list)
-        }
+        enviarListaParaWatch()
+    }
 
-        func adicionarExercicio(_ nome: String) {
-            list.append(nome)
-            SharedData.shared.enviarLista(list)
-        }
+    func adicionarExercicio(_ nome: String) {
+        let novo = Exercise(name: nome, sets: 3, restDuration: 60)
+        list.append(novo)
+    }
 
+    func enviarListaParaWatch() {
+        let nomes = list.map { $0.name }
+        SharedData.shared.list = nomes
+        SharedData.shared.enviarLista(nomes)
+    }
 }

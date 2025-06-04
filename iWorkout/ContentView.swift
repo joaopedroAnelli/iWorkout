@@ -10,39 +10,39 @@ import SwiftUI
 struct ContentView: View {
     // Lista exemplo de exercícios
     @StateObject var model = ExerciseModel()
+    
+    // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
+    private func formattedTime(_ interval: TimeInterval) -> String {
+        let totalSeconds = Int(interval)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = (totalSeconds % 60)
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
 
     var body: some View {
         NavigationView {
-            List(model.list, id: \.self) { item in
-                NavigationLink(destination: DetalheExercicioView(nome: item, model: model)) {
-                    Text(item)
+            List {
+                ForEach($model.list) { $exercise in
+                    NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
+                        Text(exercise.name)
+                    }
                 }
-            }.toolbar {
+            }
+            .toolbar {
                 Button {
-                    model.adicionarExercicio("Novo Ex. \($model.list.count + 1)")
+                    model.adicionarExercicio("Novo Ex. \(model.list.count + 1)")
                 } label: {
                     Image(systemName: "plus")
                 }
             }
             .navigationTitle("Meus Treinos")
         }
-    }
-}
-
-struct DetalheExercicioView: View {
-    let nome: String
-    
-    @ObservedObject var model: ExerciseModel
-
-    var body: some View {
-        VStack {
-            Text(nome)
-                .font(.largeTitle)
-                .padding()
-            // Aqui o temporizador de descanso será adicionado depois
-            Spacer()
-        }
-        .navigationTitle(nome)
     }
 }
 
