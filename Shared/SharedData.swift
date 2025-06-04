@@ -26,7 +26,11 @@ class SharedData: NSObject, WCSessionDelegate, ObservableObject {
     }
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        // nada aqui
+        #if os(iOS)
+        if activationState == .activated {
+            enviarLista(list)
+        }
+        #endif
     }
 
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
