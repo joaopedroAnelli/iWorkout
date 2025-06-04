@@ -13,13 +13,16 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            List(model.list, id: \.self) { item in
-                NavigationLink(destination: DetalheExercicioView(nome: item, model: model)) {
-                    Text(item)
+            List {
+                ForEach($model.list) { $exercise in
+                    NavigationLink(destination: DetalheExercicioView(exercise: $exercise, model: model)) {
+                        Text(exercise.nome)
+                    }
                 }
-            }.toolbar {
+            }
+            .toolbar {
                 Button {
-                    model.adicionarExercicio("Novo Ex. \($model.list.count + 1)")
+                    model.adicionarExercicio("Novo Ex. \(model.list.count + 1)")
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -30,19 +33,30 @@ struct ContentView: View {
 }
 
 struct DetalheExercicioView: View {
-    let nome: String
-    
+    @Binding var exercise: Exercise
     @ObservedObject var model: ExerciseModel
 
     var body: some View {
-        VStack {
-            Text(nome)
-                .font(.largeTitle)
-                .padding()
-            // Aqui o temporizador de descanso será adicionado depois
-            Spacer()
+        Form {
+            Section("Nome") {
+                TextField("Nome", text: $exercise.nome)
+                    .autocorrectionDisabled(false)
+            }
+            Section("Séries") {
+                Stepper(value: $exercise.series, in: 1...10) {
+                    Text("\(exercise.series) séries")
+                }
+            }
+            Section("Descanso") {
+                Stepper(value: $exercise.descanso, in: 15...300, step: 15) {
+                    Text("\(exercise.descanso)s entre séries")
+                }
+            }
         }
-        .navigationTitle(nome)
+        .navigationTitle("Editar Exercício")
+        .onDisappear {
+            model.enviarListaParaWatch()
+        }
     }
 }
 
