@@ -10,13 +10,27 @@ import SwiftUI
 struct ContentView: View {
     // Lista exemplo de exercícios
     @StateObject var model = ExerciseModel()
+    
+    // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
+    private func formattedTime(_ interval: TimeInterval) -> String {
+        let totalSeconds = Int(interval)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = (totalSeconds % 60)
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
 
     var body: some View {
         NavigationView {
             List {
                 ForEach($model.list) { $exercise in
-                    NavigationLink(destination: DetalheExercicioView(exercise: $exercise, model: model)) {
-                        Text(exercise.nome)
+                    NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
+                        Text(exercise.name)
                     }
                 }
             }
@@ -28,34 +42,6 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Meus Treinos")
-        }
-    }
-}
-
-struct DetalheExercicioView: View {
-    @Binding var exercise: Exercise
-    @ObservedObject var model: ExerciseModel
-
-    var body: some View {
-        Form {
-            Section("Nome") {
-                TextField("Nome", text: $exercise.nome)
-                    .autocorrectionDisabled(false)
-            }
-            Section("Séries") {
-                Stepper(value: $exercise.series, in: 1...10) {
-                    Text("\(exercise.series) séries")
-                }
-            }
-            Section("Descanso") {
-                Stepper(value: $exercise.descanso, in: 15...300, step: 15) {
-                    Text("\(exercise.descanso)s entre séries")
-                }
-            }
-        }
-        .navigationTitle("Editar Exercício")
-        .onDisappear {
-            model.enviarListaParaWatch()
         }
     }
 }

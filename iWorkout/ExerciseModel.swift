@@ -19,12 +19,12 @@ class ExerciseModel: ObservableObject {
     }
 
     func adicionarExercicio(_ nome: String) {
-        let novo = Exercise(nome: nome, series: 3, descanso: 60)
+        let novo = Exercise(name: nome, sets: 3, restDuration: 60)
         list.append(novo)
     }
 
     func enviarListaParaWatch() {
-        let nomes = list.map { $0.nome }
+        let nomes = list.map { $0.name }
         SharedData.shared.list = nomes
         SharedData.shared.enviarLista(nomes)
     }

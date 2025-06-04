@@ -9,18 +9,18 @@ import Foundation
 
 struct Exercise: Identifiable, Codable, Equatable {
     var id = UUID()
-    var nome: String
-    var series: Int
-    var descanso: Int // em segundos
+    var name: String
+    var sets: Int
+    var restDuration: TimeInterval
 }
 
 extension Exercise {
     static var exemplo: [Exercise] {
         [
-            Exercise(nome: "Agachamento", series: 3, descanso: 60),
-            Exercise(nome: "Flexão", series: 3, descanso: 45),
-            Exercise(nome: "Abdominal", series: 4, descanso: 30),
-            Exercise(nome: "Levantamento Terra", series: 3, descanso: 90)
+            Exercise(name: "Agachamento", sets: 3, restDuration: 60),
+            Exercise(name: "Flexão", sets: 3, restDuration: 45),
+            Exercise(name: "Abdominal", sets: 4, restDuration: 30),
+            Exercise(name: "Levantamento Terra", sets: 3, restDuration: 90)
         ]
     }
 }
