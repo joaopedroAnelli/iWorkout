@@ -30,7 +30,7 @@ class SharedData: NSObject, WCSessionDelegate, ObservableObject {
     }
 
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let listaRecebida = applicationContext["exercicios"] as? [String] {
+        if let listaRecebida = applicationContext["exercises"] as? [String] {
             DispatchQueue.main.async {
                 self.list = listaRecebida
             }

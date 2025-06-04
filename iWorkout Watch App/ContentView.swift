@@ -21,16 +21,21 @@ struct ContentView: View {
                 Text("Descanso: \(tempoDescanso)s")
                     .font(.title2)
             } else {
-                Text(shared.list[indiceAtual])
-                    .font(.headline)
-                    .padding()
-                Button("Próximo") {
-                    if indiceAtual < shared.list.count - 1 {
-                        indiceAtual += 1
-                        startDescanso()
+                if shared.list.indices.contains(indiceAtual) {
+                    Text(shared.list[indiceAtual])
+                        .font(.headline)
+                        .padding()
+                    Button("Próximo") {
+                        if indiceAtual < shared.list.count - 1 {
+                            indiceAtual += 1
+                            startDescanso()
+                        }
                     }
+                    .padding(.top, 10)
+                } else {
+                    Text("Nenhum exercício")
+                        .padding()
                 }
-                .padding(.top, 10)
             }
         }
         .onAppear {
