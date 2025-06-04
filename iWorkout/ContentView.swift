@@ -10,6 +10,9 @@ import SwiftUI
 struct ContentView: View {
     // Lista exemplo de exercícios
     @StateObject var model = ExerciseModel()
+    @State private var exerciseToDelete: Exercise?
+    @State private var showDeleteConfirm = false
+
     
     // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
     private func formattedTime(_ interval: TimeInterval) -> String {
@@ -32,6 +35,14 @@ struct ContentView: View {
                     NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
                         Text(exercise.name)
                     }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            exerciseToDelete = exercise
+                            showDeleteConfirm = true
+                        } label: {
+                            Label("Delete", systemName: "trash")
+                        }
+                    }
                 }
             }
             .toolbar {
@@ -42,6 +53,13 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Meus Treinos")
+            .alert("Excluir exercício?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
+                Button("Excluir", role: .destructive) {
+                    model.removeExercise(exercise)
+                }
+                Button("Cancelar", role: .cancel) { }
+            }
+
         }
     }
 }

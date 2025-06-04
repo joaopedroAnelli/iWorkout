@@ -27,6 +27,12 @@ class ExerciseModel: ObservableObject {
         list.append(novo)
     }
 
+    func removeExercise(_ exercise: Exercise) {
+        if let index = list.firstIndex(of: exercise) {
+            list.remove(at: index)
+        }
+    }
+
     func enviarListaParaWatch() {
         let nomes = list.map { $0.name }
         SharedData.shared.list = nomes
