@@ -8,13 +8,17 @@
 import Foundation
 
 class ExerciseModel: ObservableObject {
-    @Published var list: [Exercise] = Exercise.exemplo {
+    private static let storageKey = "exerciseList"
+
+    @Published var list: [Exercise] = [] {
         didSet {
+            saveList()
             enviarListaParaWatch()
         }
     }
 
     init() {
+        loadList()
         enviarListaParaWatch()
     }
 
@@ -27,5 +31,20 @@ class ExerciseModel: ObservableObject {
         let nomes = list.map { $0.name }
         SharedData.shared.list = nomes
         SharedData.shared.enviarLista(nomes)
+    }
+
+    private func saveList() {
+        if let data = try? JSONEncoder().encode(list) {
+            UserDefaults.standard.set(data, forKey: Self.storageKey)
+        }
+    }
+
+    private func loadList() {
+        if let data = UserDefaults.standard.data(forKey: Self.storageKey),
+           let saved = try? JSONDecoder().decode([Exercise].self, from: data) {
+            list = saved
+        } else {
+            list = Exercise.exemplo
+        }
     }
 }
