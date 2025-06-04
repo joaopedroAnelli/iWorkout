@@ -9,6 +9,10 @@ import SwiftUI
 
 @main
 struct iWorkoutApp: App {
+    init() {
+        _ = SharedData.shared
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
