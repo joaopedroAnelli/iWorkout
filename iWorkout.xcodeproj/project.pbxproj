@@ -136,6 +136,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				86E84BF42DEF8F4700E79D23 /* iWorkout Watch App */,
+				86E84C472DF0AEFA00E79D23 /* Shared */,
 			);
 			name = "iWorkout Watch App";
 			packageProductDependencies = (
