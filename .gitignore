@@ -1,0 +1,11 @@
+# Ignore user-specific Xcode data
+*.xcuserdatad
+*.xcworkspace/xcuserdata
+DerivedData
+
+# macOS artifacts
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
