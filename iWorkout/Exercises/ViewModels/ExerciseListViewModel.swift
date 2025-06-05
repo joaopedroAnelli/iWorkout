@@ -1,5 +1,5 @@
 //
-//  ExerciseModel.swift
+//  ExerciseListViewModel.swift
 //  iWorkout
 //
 //  Created by OpenAI on 2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ExerciseModel: ObservableObject {
+class ExerciseListViewModel: ObservableObject {
     private static let storageKey = "exerciseList"
 
     @Published var list: [Exercise] = [] {

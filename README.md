@@ -11,9 +11,9 @@ iWorkout is a paired iOS and watchOS application built with SwiftUI. The iPhone 
 ## Project Structure
 
 ```
-/Shared               Shared Swift code used by both targets
-/iWorkout             iOS app target files
-/iWorkout Watch App   watchOS app target files
+/Shared               Shared module with business logic
+/iWorkout             iOS target organized by feature
+/iWorkout Watch App   watchOS target organized by feature
 iWorkout.xcodeproj    Xcode project
 ```
 
@@ -25,7 +25,7 @@ iWorkout.xcodeproj    Xcode project
 
 * `iWorkoutApp.swift` – entry point for the iPhone app. Initializes the shared data session.
 * `ContentView.swift` – displays the exercise list with a button to add new exercises.
-* `ExerciseModel.swift` – stores the list and notifies the watch whenever it changes.
+* `ExerciseListViewModel.swift` – stores the list and notifies the watch whenever it changes.
 * `iWorkout.entitlements` – declares the application group used for sharing data.
 
 ### watchOS App
