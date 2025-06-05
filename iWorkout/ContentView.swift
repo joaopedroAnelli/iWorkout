@@ -35,6 +35,7 @@ struct ContentView: View {
                     ExerciseRow(exercise: $exercise, model: model) {
                         exerciseToDelete = exercise.wrappedValue
                         showDeleteConfirm = true
+
                     }
                 }
             }
