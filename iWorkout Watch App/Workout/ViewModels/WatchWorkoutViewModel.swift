@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 class WatchWorkoutViewModel: ObservableObject {
     @Published var currentIndex: Int = 0
@@ -8,6 +9,15 @@ class WatchWorkoutViewModel: ObservableObject {
 
     let shared = SharedData.shared
     private var timer: Timer?
+    private var cancellable: AnyCancellable?
+
+    init() {
+        // forward updates from SharedData so the view refreshes when
+        // the exercise list changes
+        cancellable = shared.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+    }
 
     func nextExercise() {
         guard currentIndex < shared.list.count - 1 else { return }
