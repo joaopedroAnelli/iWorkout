@@ -11,24 +11,24 @@ struct ContentView: View {
     // Essa lista deve espelhar os exercícios do iPhone
     @ObservedObject var shared = SharedData.shared
     
-    @State private var indiceAtual = 0
-    @State private var mostrandoDescanso = false
-    @State private var tempoDescanso = 30
+    @State private var currentIndex = 0
+    @State private var showingRest = false
+    @State private var restTime = 30
 
     var body: some View {
         VStack {
-            if mostrandoDescanso {
-                Text("Descanso: \(tempoDescanso)s")
+            if showingRest {
+                Text("Descanso: \(restTime)s")
                     .font(.title2)
             } else {
-                if shared.list.indices.contains(indiceAtual) {
-                    Text(shared.list[indiceAtual])
+                if shared.list.indices.contains(currentIndex) {
+                    Text(shared.list[currentIndex])
                         .font(.headline)
                         .padding()
                     Button("Próximo") {
-                        if indiceAtual < shared.list.count - 1 {
-                            indiceAtual += 1
-                            startDescanso()
+                        if currentIndex < shared.list.count - 1 {
+                            currentIndex += 1
+                            startRest()
                         }
                     }
                     .padding(.top, 10)
@@ -43,14 +43,14 @@ struct ContentView: View {
         }
     }
 
-    func startDescanso() {
-        mostrandoDescanso = true
-        tempoDescanso = 30
+    func startRest() {
+        showingRest = true
+        restTime = 30
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            if tempoDescanso > 0 {
-                tempoDescanso -= 1
+            if restTime > 0 {
+                restTime -= 1
             } else {
-                mostrandoDescanso = false
+                showingRest = false
                 timer.invalidate()
             }
         }

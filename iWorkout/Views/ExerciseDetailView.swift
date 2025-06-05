@@ -32,8 +32,14 @@ struct ExerciseDetailView: View {
             }
         }
         .navigationTitle("Editar Exercício")
+        .onAppear {
+            // Initialize the picker with the current value from the model
+            durationInSeconds = exercise.restDuration
+        }
         .onDisappear {
-            model.enviarListaParaWatch()
+            // Persist any changes back to the underlying Exercise
+            exercise.restDuration = durationInSeconds
+            model.sendListToWatch()
         }
     }
 }
