@@ -33,7 +33,7 @@ struct ExerciseDetailView: View {
         }
         .navigationTitle("Editar Exercício")
         .onDisappear {
-            model.enviarListaParaWatch()
+            model.sendListToWatch()
         }
     }
 }

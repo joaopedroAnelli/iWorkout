@@ -15,7 +15,7 @@ struct Exercise: Identifiable, Codable, Equatable {
 }
 
 extension Exercise {
-    static var exemplo: [Exercise] {
+    static var sampleExercises: [Exercise] {
         [
             Exercise(name: "Agachamento", sets: 3, restDuration: 60),
             Exercise(name: "Flexão", sets: 3, restDuration: 45),
