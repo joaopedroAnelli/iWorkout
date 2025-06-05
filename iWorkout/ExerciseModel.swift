@@ -50,7 +50,7 @@ class ExerciseModel: ObservableObject {
            let saved = try? JSONDecoder().decode([Exercise].self, from: data) {
             list = saved
         } else {
-            list = Exercise.sampleExercises
+            list = []
         }
     }
 }
