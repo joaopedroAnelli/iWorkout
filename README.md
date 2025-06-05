@@ -42,3 +42,11 @@ Open `iWorkout.xcodeproj` in Xcode (version 14 or later recommended). Build and 
 
 The project currently lacks tests and documentation. Adding unit tests, improving error handling, and expanding the rest timer features would be valuable enhancements.
 
+## Localization
+
+The UI strings are defined using `LocalizedStringKey` so the app can be translated.
+English is the base language and Brazilian Portuguese translations live under `*.lproj/Localizable.strings` in
+each target's `Resources` folder. Add additional languages by creating a new
+`<language>.lproj` directory with a `Localizable.strings` file containing the
+desired translations.
+
