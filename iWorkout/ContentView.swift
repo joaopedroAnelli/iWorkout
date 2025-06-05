@@ -33,7 +33,7 @@ struct ContentView: View {
             List {
                 ForEach($model.list) { $exercise in
                     ExerciseRow(exercise: $exercise, model: model) {
-                        exerciseToDelete = exercise.wrappedValue
+                        exerciseToDelete = exercise
                         showDeleteConfirm = true
 
                     }
@@ -78,7 +78,7 @@ struct ExerciseRow: View {
             Button(role: .destructive) {
                 onDelete()
             } label: {
-                Label("Delete", systemName: "trash")
+                Label("Excluir", systemImage: "trash")
             }
         }
     }
