@@ -40,19 +40,19 @@ struct CountdownTimerPicker: View {
 
     var body: some View {
         HStack {
-            Picker("Horas", selection: hoursBinding) {
+            Picker("Hours", selection: hoursBinding) {
                 ForEach(0..<24, id: \.self) { Text("\($0)h").tag($0) }
             }
             .frame(maxWidth: .infinity)
             .clipped()
 
-            Picker("Minutos", selection: minutesBinding) {
+            Picker("Minutes", selection: minutesBinding) {
                 ForEach(0..<60, id: \.self) { Text("\($0)m").tag($0) }
             }
             .frame(maxWidth: .infinity)
             .clipped()
 
-            Picker("Segundos", selection: secondsBinding) {
+            Picker("Seconds", selection: secondsBinding) {
                 ForEach(0..<60, id: \.self) { Text("\($0)s").tag($0) }
             }
             .frame(maxWidth: .infinity)

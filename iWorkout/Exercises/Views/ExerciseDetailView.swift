@@ -15,23 +15,23 @@ struct ExerciseDetailView: View {
 
     var body: some View {
         Form {
-            Section("Nome") {
-                TextField("Nome", text: $exercise.name)
+            Section("Name") {
+                TextField("Name", text: $exercise.name)
                     .autocorrectionDisabled(false)
             }
-            Section("Séries") {
+            Section("Sets") {
                 Stepper(value: $exercise.sets, in: 1...10) {
-                    Text("\(exercise.sets) séries")
+                    Text("\(exercise.sets) sets")
                 }
             }
-            Section("Descanso") {
+            Section("Rest") {
                 CountdownTimerPicker(duration: $durationInSeconds)
                                 .frame(maxWidth: .infinity)
                                 .clipped()
                                 .padding(.horizontal)
             }
         }
-        .navigationTitle("Editar Exercício")
+        .navigationTitle("Edit Exercise")
         .onAppear {
             // Initialize the picker with the current value from the model
             durationInSeconds = exercise.restDuration

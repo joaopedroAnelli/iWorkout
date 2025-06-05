@@ -13,19 +13,19 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if viewModel.showingRest {
-                Text("Descanso: \(viewModel.restTime)s")
+                Text("Rest: \(viewModel.restTime)s")
                     .font(.title2)
             } else {
                 if viewModel.shared.list.indices.contains(viewModel.currentIndex) {
                     Text(viewModel.shared.list[viewModel.currentIndex])
                         .font(.headline)
                         .padding()
-                    Button("Próximo") {
+                    Button("Next") {
                         viewModel.nextExercise()
                     }
                     .padding(.top, 10)
                 } else {
-                    Text("Nenhum exercício")
+                    Text("No exercise")
                         .padding()
                 }
             }

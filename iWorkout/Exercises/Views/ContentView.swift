@@ -32,7 +32,7 @@ struct ContentView: View {
         NavigationView {
             List {
                 if model.list.isEmpty {
-                    Text("Você ainda não adicionou exercícios")
+                    Text("You haven't added exercises yet")
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
@@ -47,17 +47,21 @@ struct ContentView: View {
             }
             .toolbar {
                 Button {
-                    model.addExercise("Novo Ex. \(model.list.count + 1)")
+                    let title = String(
+                        format: NSLocalizedString("New Ex. %d", comment: "Default exercise name"),
+                        model.list.count + 1
+                    )
+                    model.addExercise(title)
                 } label: {
                     Image(systemName: "plus")
                 }
             }
-            .navigationTitle("Meus Treinos")
-            .alert("Excluir exercício?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
-                Button("Excluir", role: .destructive) {
+            .navigationTitle("My Workouts")
+            .alert("Delete exercise?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
+                Button("Delete", role: .destructive) {
                     model.removeExercise(exercise)
                 }
-                Button("Cancelar", role: .cancel) { }
+                Button("Cancel", role: .cancel) { }
             }
 
         }
@@ -84,7 +88,7 @@ struct ExerciseRow: View {
             Button(role: .destructive) {
                 onDelete()
             } label: {
-                Label("Excluir", systemImage: "trash")
+                Label("Delete", systemImage: "trash")
             }
         }
     }
