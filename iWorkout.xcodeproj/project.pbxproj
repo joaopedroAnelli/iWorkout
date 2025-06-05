@@ -39,16 +39,6 @@
 		86E84BF02DEF8F4700E79D23 /* iWorkout Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iWorkout Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		86E84C482DF0AEFE00E79D23 /* Exceptions for "Shared" folder in "iWorkout Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				SharedData.swift,
-			);
-			target = 86E84BEF2DEF8F4700E79D23 /* iWorkout Watch App */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		86E84BE52DEF8F4600E79D23 /* iWorkout */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -62,9 +52,6 @@
 		};
 		86E84C472DF0AEFA00E79D23 /* Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				86E84C482DF0AEFE00E79D23 /* Exceptions for "Shared" folder in "iWorkout Watch App" target */,
-			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -149,6 +136,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				86E84BF42DEF8F4700E79D23 /* iWorkout Watch App */,
+				86E84C472DF0AEFA00E79D23 /* Shared */,
 			);
 			name = "iWorkout Watch App";
 			packageProductDependencies = (
@@ -357,7 +345,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "iWorkout Watch App/iWorkout Watch App.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "iWorkout Watch App/Resources/iWorkout Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TAFY54UA79;
@@ -387,7 +375,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "iWorkout Watch App/iWorkout Watch App.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "iWorkout Watch App/Resources/iWorkout Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TAFY54UA79;
@@ -418,7 +406,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = iWorkout/iWorkout.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iWorkout/Resources/iWorkout.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TAFY54UA79;
@@ -450,7 +438,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = iWorkout/iWorkout.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iWorkout/Resources/iWorkout.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TAFY54UA79;
