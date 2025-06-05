@@ -33,11 +33,11 @@ struct ContentView: View {
             List {
                 ForEach($model.list) { $exercise in
                     NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
-                        Text(exercise.name)
+                        Text(exercise.wrappedValue.name)
                     }
                     .swipeActions {
                         Button(role: .destructive) {
-                            exerciseToDelete = exercise
+                            exerciseToDelete = exercise.wrappedValue
                             showDeleteConfirm = true
                         } label: {
                             Label("Delete", systemName: "trash")
