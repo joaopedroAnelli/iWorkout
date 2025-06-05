@@ -39,7 +39,7 @@ struct ExerciseDetailView: View {
         .onDisappear {
             // Persist any changes back to the underlying Exercise
             exercise.restDuration = durationInSeconds
-            model.enviarListaParaWatch()
+            model.sendListToWatch()
         }
     }
 }

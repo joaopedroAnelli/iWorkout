@@ -41,7 +41,7 @@ struct ContentView: View {
             }
             .toolbar {
                 Button {
-                    model.adicionarExercicio("Novo Ex. \(model.list.count + 1)")
+                    model.addExercise("Novo Ex. \(model.list.count + 1)")
                 } label: {
                     Image(systemName: "plus")
                 }

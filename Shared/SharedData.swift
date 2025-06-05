@@ -28,20 +28,20 @@ class SharedData: NSObject, WCSessionDelegate, ObservableObject {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         #if os(iOS)
         if activationState == .activated {
-            enviarLista(list)
+            sendList(list)
         }
         #endif
     }
 
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        if let listaRecebida = applicationContext["exercises"] as? [String] {
+        if let receivedList = applicationContext["exercises"] as? [String] {
             DispatchQueue.main.async {
-                self.list = listaRecebida
+                self.list = receivedList
             }
         }
     }
 
-    func enviarLista(_ list: [String]) {
+    func sendList(_ list: [String]) {
         do {
             try WCSession.default.updateApplicationContext(["exercises": list])
         } catch {
