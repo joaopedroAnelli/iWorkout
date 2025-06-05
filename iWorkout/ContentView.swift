@@ -31,11 +31,17 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach($model.list) { $exercise in
-                    ExerciseRow(exercise: $exercise, model: model) {
-                        exerciseToDelete = exercise
-                        showDeleteConfirm = true
+                if model.list.isEmpty {
+                    Text("Você ainda não adicionou exercícios")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    ForEach($model.list) { $exercise in
+                        ExerciseRow(exercise: $exercise, model: model) {
+                            exerciseToDelete = exercise
+                            showDeleteConfirm = true
 
+                        }
                     }
                 }
             }
