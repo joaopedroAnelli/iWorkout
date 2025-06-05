@@ -10,6 +10,9 @@ import SwiftUI
 struct ContentView: View {
     // Lista exemplo de exercícios
     @StateObject var model = ExerciseModel()
+    @State private var exerciseToDelete: Exercise?
+    @State private var showDeleteConfirm = false
+
     
     // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
     private func formattedTime(_ interval: TimeInterval) -> String {
@@ -29,8 +32,10 @@ struct ContentView: View {
         NavigationView {
             List {
                 ForEach($model.list) { $exercise in
-                    NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
-                        Text(exercise.name)
+                    ExerciseRow(exercise: $exercise, model: model) {
+                        exerciseToDelete = exercise
+                        showDeleteConfirm = true
+
                     }
                 }
             }
@@ -42,6 +47,13 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Meus Treinos")
+            .alert("Excluir exercício?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
+                Button("Excluir", role: .destructive) {
+                    model.removeExercise(exercise)
+                }
+                Button("Cancelar", role: .cancel) { }
+            }
+
         }
     }
 }
@@ -49,5 +61,25 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+// A separate view for a single exercise row
+struct ExerciseRow: View {
+    @Binding var exercise: Exercise
+    var model: ExerciseModel
+    var onDelete: () -> Void
+
+    var body: some View {
+        NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
+            Text(exercise.name)
+        }
+        .swipeActions {
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Label("Excluir", systemImage: "trash")
+            }
+        }
     }
 }
