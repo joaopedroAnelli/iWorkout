@@ -13,18 +13,18 @@ class ExerciseModel: ObservableObject {
     @Published var list: [Exercise] = [] {
         didSet {
             saveList()
-            enviarListaParaWatch()
+            sendListToWatch()
         }
     }
 
     init() {
         loadList()
-        enviarListaParaWatch()
+        sendListToWatch()
     }
 
-    func adicionarExercicio(_ nome: String) {
-        let novo = Exercise(name: nome, sets: 3, restDuration: 60)
-        list.append(novo)
+    func addExercise(_ name: String) {
+        let newExercise = Exercise(name: name, sets: 3, restDuration: 60)
+        list.append(newExercise)
     }
 
     func removeExercise(_ exercise: Exercise) {
@@ -33,10 +33,10 @@ class ExerciseModel: ObservableObject {
         }
     }
 
-    func enviarListaParaWatch() {
-        let nomes = list.map { $0.name }
-        SharedData.shared.list = nomes
-        SharedData.shared.enviarLista(nomes)
+    func sendListToWatch() {
+        let names = list.map { $0.name }
+        SharedData.shared.list = names
+        SharedData.shared.sendList(names)
     }
 
     private func saveList() {
@@ -50,7 +50,7 @@ class ExerciseModel: ObservableObject {
            let saved = try? JSONDecoder().decode([Exercise].self, from: data) {
             list = saved
         } else {
-            list = Exercise.exemplo
+            list = Exercise.sampleExercises
         }
     }
 }
