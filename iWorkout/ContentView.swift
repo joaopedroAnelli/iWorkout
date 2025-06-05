@@ -32,16 +32,9 @@ struct ContentView: View {
         NavigationView {
             List {
                 ForEach($model.list) { $exercise in
-                    NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
-                        Text(exercise.name)
-                    }
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            exerciseToDelete = exercise
-                            showDeleteConfirm = true
-                        } label: {
-                            Label("Delete", systemName: "trash")
-                        }
+                    ExerciseRow(exercise: $exercise, model: model) {
+                        exerciseToDelete = exercise.wrappedValue
+                        showDeleteConfirm = true
                     }
                 }
             }
@@ -67,5 +60,25 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+// A separate view for a single exercise row
+struct ExerciseRow: View {
+    @Binding var exercise: Exercise
+    var model: ExerciseModel
+    var onDelete: () -> Void
+
+    var body: some View {
+        NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
+            Text(exercise.name)
+        }
+        .swipeActions {
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Label("Delete", systemName: "trash")
+            }
+        }
     }
 }
