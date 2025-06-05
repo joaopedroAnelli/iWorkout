@@ -31,10 +31,11 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(model.list.indices, id: \.self) { index in
-                    ExerciseRow(exercise: $model.list[index], model: model) {
-                        exerciseToDelete = model.list[index]
+                ForEach($model.list) { $exercise in
+                    ExerciseRow(exercise: $exercise, model: model) {
+                        exerciseToDelete = exercise.wrappedValue
                         showDeleteConfirm = true
+
                     }
                 }
             }
