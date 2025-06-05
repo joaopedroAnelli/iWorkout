@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     // Lista exemplo de exercícios
-    @StateObject var model = ExerciseModel()
+    @StateObject var model = ExerciseListViewModel()
     @State private var exerciseToDelete: Exercise?
     @State private var showDeleteConfirm = false
 
@@ -73,7 +73,7 @@ struct ContentView_Previews: PreviewProvider {
 // A separate view for a single exercise row
 struct ExerciseRow: View {
     @Binding var exercise: Exercise
-    var model: ExerciseModel
+    var model: ExerciseListViewModel
     var onDelete: () -> Void
 
     var body: some View {

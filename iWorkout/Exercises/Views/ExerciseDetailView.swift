@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ExerciseDetailView: View {
     @Binding var exercise: Exercise
-    @ObservedObject var model: ExerciseModel
+    @ObservedObject var model: ExerciseListViewModel
     @State private var durationInSeconds: TimeInterval = 60 * 5
 
     var body: some View {
@@ -48,7 +48,7 @@ struct ExerciseDetailView: View {
 struct ExerciseDetailView_Preview: PreviewProvider {
     @State static private var exercise: Exercise = Exercise(name: "Agachamento", sets: 3, restDuration: 60)
     
-    static private var model: ExerciseModel = ExerciseModel()
+    static private var model: ExerciseListViewModel = ExerciseListViewModel()
     
     static var previews: some View {
         ExerciseDetailView(exercise: $exercise, model: model)
