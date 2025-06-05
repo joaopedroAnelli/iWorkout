@@ -1,49 +1,63 @@
-//
-//  CountdownTimerPicker.swift
-//  iWorkout
-//
-//  Created by João Anelli on 6/4/25.
-//
-
-
 import SwiftUI
 
-struct CountdownTimerPicker: UIViewRepresentable {
-    /// Quantidade de segundos selecionados (binding ao SwiftUI)
+/// Picker para selecionar horas, minutos e segundos.
+/// Mantém o valor sincronizado via `TimeInterval`.
+struct CountdownTimerPicker: View {
     @Binding var duration: TimeInterval
-    
-    func makeUIView(context: Context) -> UIDatePicker {
-        let picker = UIDatePicker()
-        picker.datePickerMode = .countDownTimer
-        picker.preferredDatePickerStyle = .wheels
-        picker.minuteInterval = 1
-        picker.addTarget(
-            context.coordinator,
-            action: #selector(Coordinator.uiKitValueChanged(_:)),
-            for: .valueChanged
+
+    private var hoursBinding: Binding<Int> {
+        Binding<Int>(
+            get: { Int(duration) / 3600 },
+            set: { newValue in
+                let minutes = (Int(duration) % 3600) / 60
+                let seconds = Int(duration) % 60
+                duration = TimeInterval(newValue * 3600 + minutes * 60 + seconds)
+            }
         )
-        return picker
     }
-    
-    func updateUIView(_ uiView: UIDatePicker, context: Context) {
-        // Sincroniza a duração atualizada (em segundos) com o UIDatePicker
-        uiView.countDownDuration = duration
+
+    private var minutesBinding: Binding<Int> {
+        Binding<Int>(
+            get: { (Int(duration) % 3600) / 60 },
+            set: { newValue in
+                let hours = Int(duration) / 3600
+                let seconds = Int(duration) % 60
+                duration = TimeInterval(hours * 3600 + newValue * 60 + seconds)
+            }
+        )
     }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
+
+    private var secondsBinding: Binding<Int> {
+        Binding<Int>(
+            get: { Int(duration) % 60 },
+            set: { newValue in
+                let hours = Int(duration) / 3600
+                let minutes = (Int(duration) % 3600) / 60
+                duration = TimeInterval(hours * 3600 + minutes * 60 + newValue)
+            }
+        )
     }
-    
-    class Coordinator: NSObject {
-        let parent: CountdownTimerPicker
-        
-        init(parent: CountdownTimerPicker) {
-            self.parent = parent
+
+    var body: some View {
+        HStack {
+            Picker("Horas", selection: hoursBinding) {
+                ForEach(0..<24, id: \.self) { Text("\($0)h").tag($0) }
+            }
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            Picker("Minutos", selection: minutesBinding) {
+                ForEach(0..<60, id: \.self) { Text("\($0)m").tag($0) }
+            }
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            Picker("Segundos", selection: secondsBinding) {
+                ForEach(0..<60, id: \.self) { Text("\($0)s").tag($0) }
+            }
+            .frame(maxWidth: .infinity)
+            .clipped()
         }
-        
-        @objc func uiKitValueChanged(_ sender: UIDatePicker) {
-            // Atualiza o binding sempre que o usuário muda o valor
-            parent.duration = sender.countDownDuration
-        }
+        .pickerStyle(.wheel)
     }
 }
