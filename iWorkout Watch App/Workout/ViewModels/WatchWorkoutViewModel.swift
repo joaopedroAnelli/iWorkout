@@ -6,7 +6,7 @@ class WatchWorkoutViewModel: ObservableObject {
     @Published var showingRest: Bool = false
     @Published var restTime: Int = 30
 
-    let shared = SharedData.shared
+    @ObservedObject var shared = SharedData.shared
     private var timer: Timer?
 
     func nextExercise() {
