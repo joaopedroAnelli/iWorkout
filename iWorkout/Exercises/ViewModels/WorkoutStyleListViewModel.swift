@@ -4,7 +4,11 @@ class WorkoutStyleListViewModel: ObservableObject {
     private static let storageKey = "workoutStyles"
 
     @Published var styles: [WorkoutStyle] = [] {
-        didSet { save() }
+        didSet {
+            save()
+            SharedData.shared.styles = styles
+            SharedData.shared.sendStyles(styles)
+        }
     }
 
     init() {

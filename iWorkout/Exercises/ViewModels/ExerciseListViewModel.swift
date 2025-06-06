@@ -46,7 +46,7 @@ class ExerciseListViewModel: ObservableObject {
 
     func addExercise(_ name: String) {
         var updated = session
-        updated.exercises.append(Exercise(name: name, sets: 3, restDuration: 60))
+        updated.exercises.append(Exercise(sessionId: session.id, name: name, sets: 3, restDuration: 60))
         session = updated
     }
 
@@ -59,8 +59,9 @@ class ExerciseListViewModel: ObservableObject {
     }
 
     func sendListToWatch() {
-        let names = list.map { $0.name }
-        SharedData.shared.list = names
-        SharedData.shared.sendList(names)
+        if let styles = styleModel?.styles {
+            SharedData.shared.styles = styles
+            SharedData.shared.sendStyles(styles)
+        }
     }
 }

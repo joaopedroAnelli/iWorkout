@@ -9,6 +9,8 @@ import Foundation
 
 struct Exercise: Identifiable, Codable, Equatable {
     var id = UUID()
+    /// Identifier of the session this exercise belongs to
+    var sessionId = UUID()
     var name: String
     var sets: Int
     var restDuration: TimeInterval

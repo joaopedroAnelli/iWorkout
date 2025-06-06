@@ -15,7 +15,7 @@ struct iWorkoutApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WorkoutStyleListView()
         }
     }
 }
