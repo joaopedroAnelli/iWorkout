@@ -44,9 +44,10 @@ class ExerciseListViewModel: ObservableObject {
         self.sessionIndex = 0
     }
 
-    func addExercise(_ name: String) {
+    func addExercise(name: String, sets: Int, restDuration: TimeInterval) {
         var updated = session
-        updated.exercises.append(Exercise(sessionId: session.id, name: name, sets: 3, restDuration: 60))
+        let exercise = Exercise(sessionId: session.id, name: name, sets: sets, restDuration: restDuration)
+        updated.exercises.append(exercise)
         session = updated
     }
 

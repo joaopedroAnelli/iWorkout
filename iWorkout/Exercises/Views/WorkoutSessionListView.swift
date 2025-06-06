@@ -3,6 +3,8 @@ import SwiftUI
 /// Displays the sessions of a given workout style
 struct WorkoutSessionListView: View {
     @StateObject var viewModel: WorkoutSessionViewModel
+    @State private var showAddSession = false
+    @State private var newSessionName = ""
 
     var body: some View {
         List {
@@ -28,15 +30,31 @@ struct WorkoutSessionListView: View {
         }
         .navigationTitle(viewModel.style.name)
         .toolbar {
-            Button(action: addSession) {
+            Button(action: { showAddSession = true }) {
                 Image(systemName: "plus")
             }
         }
-    }
-
-    private func addSession() {
-        let title = String(format: NSLocalizedString("Session %d", comment: "Default session name"), viewModel.sessions.count + 1)
-        viewModel.addSession(title)
+        .sheet(isPresented: $showAddSession) {
+            NavigationView {
+                Form {
+                    TextField("Session name", text: $newSessionName)
+                }
+                .navigationTitle("New Session")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showAddSession = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Add") {
+                            viewModel.addSession(newSessionName)
+                            showAddSession = false
+                            newSessionName = ""
+                        }
+                        .disabled(newSessionName.isEmpty)
+                    }
+                }
+            }
+        }
     }
 }
 

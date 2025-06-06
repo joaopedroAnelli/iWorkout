@@ -11,6 +11,10 @@ struct ExerciseListView: View {
     @StateObject var model: ExerciseListViewModel
     @State private var exerciseToDelete: Exercise?
     @State private var showDeleteConfirm = false
+    @State private var showAddExercise = false
+    @State private var newExerciseName = ""
+    @State private var newExerciseSets: Int = 3
+    @State private var newExerciseRest: TimeInterval = 60
 
     
     // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
@@ -48,14 +52,40 @@ struct ExerciseListView: View {
             }
         }
         .toolbar {
-            Button {
-                let title = String(
-                    format: NSLocalizedString("New Ex. %d", comment: "Default exercise name"),
-                    model.list.count + 1
-                )
-                model.addExercise(title)
-            } label: {
-                Image(systemName: "plus")
+            Button { showAddExercise = true } label: { Image(systemName: "plus") }
+        }
+        .sheet(isPresented: $showAddExercise) {
+            NavigationView {
+                Form {
+                    Section("Name") { TextField("Name", text: $newExerciseName) }
+                    Section("Sets") {
+                        Stepper(value: $newExerciseSets, in: 1...10) {
+                            Text("\(newExerciseSets) sets")
+                        }
+                    }
+                    Section("Rest") {
+                        CountdownTimerPicker(duration: $newExerciseRest)
+                            .frame(maxWidth: .infinity)
+                            .clipped()
+                            .padding(.horizontal)
+                    }
+                }
+                .navigationTitle("New Exercise")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showAddExercise = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Add") {
+                            model.addExercise(name: newExerciseName, sets: newExerciseSets, restDuration: newExerciseRest)
+                            showAddExercise = false
+                            newExerciseName = ""
+                            newExerciseSets = 3
+                            newExerciseRest = 60
+                        }
+                        .disabled(newExerciseName.isEmpty)
+                    }
+                }
             }
         }
         .navigationTitle(model.session.name)
