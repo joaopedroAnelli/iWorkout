@@ -1,56 +1,68 @@
-//
-//  ExerciseListViewModel.swift
-//  iWorkout
-//
-//  Created by OpenAI on 2023.
-//
-
 import Foundation
 
 class ExerciseListViewModel: ObservableObject {
-    private static let storageKey = "exerciseList"
-
-    @Published var list: [Exercise] = [] {
+    private var styleModel: WorkoutStyleListViewModel?
+    private var styleIndex: Int = 0
+    private var sessionIndex: Int = 0
+    @Published var session: WorkoutSession {
         didSet {
-            saveList()
+            onUpdate(session)
             sendListToWatch()
         }
     }
 
-    init() {
-        loadList()
+    private let onUpdate: (WorkoutSession) -> Void
+
+    var list: [Exercise] {
+        get { session.exercises }
+        set { session.exercises = newValue }
+    }
+
+    init(session: WorkoutSession, onUpdate: @escaping (WorkoutSession) -> Void) {
+        self.session = session
+        self.onUpdate = onUpdate
         sendListToWatch()
     }
 
-    func addExercise(_ name: String) {
-        let newExercise = Exercise(name: name, sets: 3, restDuration: 60)
-        list.append(newExercise)
+    convenience init() {
+        let model = WorkoutStyleListViewModel()
+        if model.styles.isEmpty {
+            let defaultStyle = WorkoutStyle(name: "Default", sessions: [WorkoutSession(name: "Session")])
+            model.styles = [defaultStyle]
+        }
+        self.init(session: model.styles[0].sessions[0]) { updated in
+            var style = model.styles[0]
+            if style.sessions.isEmpty {
+                style.sessions = [updated]
+            } else {
+                style.sessions[0] = updated
+            }
+            model.updateStyle(style)
+        }
+        self.styleModel = model
+        self.styleIndex = 0
+        self.sessionIndex = 0
+    }
+
+    func addExercise(name: String, sets: Int, restDuration: TimeInterval) {
+        var updated = session
+        let exercise = Exercise(sessionId: session.id, name: name, sets: sets, restDuration: restDuration)
+        updated.exercises.append(exercise)
+        session = updated
     }
 
     func removeExercise(_ exercise: Exercise) {
-        if let index = list.firstIndex(of: exercise) {
-            list.remove(at: index)
+        var updated = session
+        if let index = updated.exercises.firstIndex(of: exercise) {
+            updated.exercises.remove(at: index)
+            session = updated
         }
     }
 
     func sendListToWatch() {
-        let names = list.map { $0.name }
-        SharedData.shared.list = names
-        SharedData.shared.sendList(names)
-    }
-
-    private func saveList() {
-        if let data = try? JSONEncoder().encode(list) {
-            UserDefaults.standard.set(data, forKey: Self.storageKey)
-        }
-    }
-
-    private func loadList() {
-        if let data = UserDefaults.standard.data(forKey: Self.storageKey),
-           let saved = try? JSONDecoder().decode([Exercise].self, from: data) {
-            list = saved
-        } else {
-            list = []
+        if let styles = styleModel?.styles {
+            SharedData.shared.styles = styles
+            SharedData.shared.sendStyles(styles)
         }
     }
 }

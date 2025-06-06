@@ -3,6 +3,12 @@ import SwiftUI
 import Combine
 
 class WatchWorkoutViewModel: ObservableObject {
+    @Published var styleIndex: Int = 0 {
+        didSet { resetProgress() }
+    }
+    @Published var sessionIndex: Int = 0 {
+        didSet { resetProgress() }
+    }
     @Published var currentIndex: Int = 0
     @Published var showingRest: Bool = false
     @Published var restTime: Int = 30
@@ -19,8 +25,21 @@ class WatchWorkoutViewModel: ObservableObject {
         }
     }
 
+    func resetProgress() {
+        currentIndex = 0
+        showingRest = false
+    }
+
+    var currentSession: WorkoutSession? {
+        guard shared.styles.indices.contains(styleIndex) else { return nil }
+        let style = shared.styles[styleIndex]
+        guard style.sessions.indices.contains(sessionIndex) else { return nil }
+        return style.sessions[sessionIndex]
+    }
+
     func nextExercise() {
-        guard currentIndex < shared.list.count - 1 else { return }
+        guard let session = currentSession,
+              currentIndex < session.exercises.count - 1 else { return }
         currentIndex += 1
         startRest()
     }
