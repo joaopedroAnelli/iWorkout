@@ -29,10 +29,10 @@ struct ExerciseListView: View {
 
     var body: some View {
         List {
-            Section {
-                TextField("Session name", text: $model.session.name)
+            Section("Name") {
+                TextField("Name", text: $model.session.name)
             }
-            Section {
+            Section("Exercises") {
                 if model.list.isEmpty {
                     Text("You haven't added exercises yet")
                         .foregroundColor(.secondary)

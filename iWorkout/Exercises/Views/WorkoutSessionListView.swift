@@ -6,10 +6,10 @@ struct WorkoutSessionListView: View {
 
     var body: some View {
         List {
-            Section {
+            Section("Name") {
                 TextField("Style name", text: $viewModel.style.name)
             }
-            Section {
+            Section ("Sessions") {
                 ForEach(viewModel.sessions) { session in
                     NavigationLink(session.name) {
                         ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
