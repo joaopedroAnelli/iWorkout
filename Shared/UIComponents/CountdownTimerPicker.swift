@@ -41,22 +41,25 @@ struct CountdownTimerPicker: View {
     var body: some View {
         HStack {
             Picker("Hours", selection: hoursBinding) {
-                ForEach(0..<24, id: \.self) { Text("\($0)h").tag($0) }
+                ForEach(0..<24, id: \.self) { Text("\($0)").tag($0) }
             }
             .frame(maxWidth: .infinity)
             .clipped()
+            Text("Hours")
 
             Picker("Minutes", selection: minutesBinding) {
-                ForEach(0..<60, id: \.self) { Text("\($0)m").tag($0) }
+                ForEach(0..<60, id: \.self) { Text("\($0)").tag($0) }
             }
             .frame(maxWidth: .infinity)
             .clipped()
+            Text("Minutes")
 
             Picker("Seconds", selection: secondsBinding) {
-                ForEach(0..<60, id: \.self) { Text("\($0)s").tag($0) }
+                ForEach(0..<60, id: \.self) { Text("\($0)").tag($0) }
             }
             .frame(maxWidth: .infinity)
             .clipped()
+            Text("Seconds")
         }
         .pickerStyle(.wheel)
     }
