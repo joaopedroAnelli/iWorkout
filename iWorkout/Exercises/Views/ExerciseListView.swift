@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExerciseListView: View {
     @StateObject var model: ExerciseListViewModel
+    @State private var sessionName = ""
     @State private var exerciseToDelete: Exercise?
     @State private var showDeleteConfirm = false
     @State private var showAddExercise = false
@@ -34,7 +35,11 @@ struct ExerciseListView: View {
     var body: some View {
         List {
             Section("Name") {
-                TextField("Name", text: $model.session.name)
+                TextField("Name", text: $sessionName, onEditingChanged: { editing in
+                    if !editing {
+                        model.session.name = sessionName
+                    }
+                })
             }
             Section("Exercises") {
                 if model.list.isEmpty {
@@ -88,7 +93,9 @@ struct ExerciseListView: View {
                 }
             }
         }
-        .navigationTitle(model.session.name)
+        .navigationTitle(sessionName)
+        .onAppear { sessionName = model.session.name }
+        .onDisappear { model.session.name = sessionName }
         .alert("Delete exercise?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
             Button("Delete", role: .destructive) {
                 model.removeExercise(exercise)
