@@ -10,6 +10,7 @@ import SwiftUI
 struct ExerciseListView: View {
     @StateObject var model: ExerciseListViewModel
     @State private var sessionName = ""
+    @State private var showEditSession = false
     @State private var exerciseToDelete: Exercise?
     @State private var showDeleteConfirm = false
     @State private var showAddExercise = false
@@ -34,14 +35,7 @@ struct ExerciseListView: View {
 
     var body: some View {
         List {
-            Section("Name") {
-                TextField("Name", text: $sessionName, onEditingChanged: { editing in
-                    if !editing {
-                        model.session.name = sessionName
-                    }
-                })
-            }
-            Section("Exercises") {
+            Section {
                 if model.list.isEmpty {
                     Text("You haven't added exercises yet")
                         .foregroundColor(.secondary)
@@ -57,7 +51,13 @@ struct ExerciseListView: View {
             }
         }
         .toolbar {
-            Button { showAddExercise = true } label: { Image(systemName: "plus") }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button { showAddExercise = true } label: { Image(systemName: "plus") }
+                Button {
+                    sessionName = model.session.name
+                    showEditSession = true
+                } label: { Image(systemName: "pencil") }
+            }
         }
         .sheet(isPresented: $showAddExercise) {
             NavigationView {
@@ -89,6 +89,26 @@ struct ExerciseListView: View {
                             newExerciseRest = 60
                         }
                         .disabled(newExerciseName.isEmpty)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showEditSession) {
+            NavigationView {
+                Form {
+                    TextField("Session name", text: $sessionName)
+                }
+                .navigationTitle("Edit Session")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showEditSession = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            model.session.name = sessionName
+                            showEditSession = false
+                        }
+                        .disabled(sessionName.isEmpty)
                     }
                 }
             }
