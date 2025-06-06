@@ -5,12 +5,11 @@ struct WorkoutSessionListView: View {
     @StateObject var viewModel: WorkoutSessionViewModel
     @State private var showAddSession = false
     @State private var newSessionName = ""
+    @State private var showEditStyle = false
+    @State private var editedStyleName = ""
 
     var body: some View {
         List {
-            Section {
-                TextField("Style name", text: $viewModel.style.name)
-            }
             Section {
                 ForEach(viewModel.sessions) { session in
                     NavigationLink(session.name) {
@@ -30,8 +29,16 @@ struct WorkoutSessionListView: View {
         }
         .navigationTitle(viewModel.style.name)
         .toolbar {
-            Button(action: { showAddSession = true }) {
-                Image(systemName: "plus")
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: { showAddSession = true }) {
+                    Image(systemName: "plus")
+                }
+                Button(action: {
+                    editedStyleName = viewModel.style.name
+                    showEditStyle = true
+                }) {
+                    Image(systemName: "pencil")
+                }
             }
         }
         .sheet(isPresented: $showAddSession) {
@@ -51,6 +58,26 @@ struct WorkoutSessionListView: View {
                             newSessionName = ""
                         }
                         .disabled(newSessionName.isEmpty)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showEditStyle) {
+            NavigationView {
+                Form {
+                    TextField("Style name", text: $editedStyleName)
+                }
+                .navigationTitle("Edit Style")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showEditStyle = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            viewModel.style.name = editedStyleName
+                            showEditStyle = false
+                        }
+                        .disabled(editedStyleName.isEmpty)
                     }
                 }
             }
