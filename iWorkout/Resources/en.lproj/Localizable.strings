@@ -15,6 +15,9 @@
 "Hours" = "Hours";
 "Minutes" = "Minutes";
 "Seconds" = "Seconds";
+"Exercises" = "Exercises";
+"Sessions" = "Sessions";
+"Workouts" = "Workouts";
 "Edit Style" = "Edit Style";
 "Edit Session" = "Edit Session";
 "New Exercise" = "New Exercise";
