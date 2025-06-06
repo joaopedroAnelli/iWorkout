@@ -113,9 +113,7 @@ struct ExerciseListView: View {
                 }
             }
         }
-        .navigationTitle(sessionName)
-        .onAppear { sessionName = model.session.name }
-        .onDisappear { model.session.name = sessionName }
+        .navigationTitle(model.session.name)
         .alert("Delete exercise?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
             Button("Delete", role: .destructive) {
                 model.removeExercise(exercise)
