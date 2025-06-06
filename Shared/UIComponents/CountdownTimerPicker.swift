@@ -40,13 +40,6 @@ struct CountdownTimerPicker: View {
 
     var body: some View {
         HStack {
-            Picker("Hours", selection: hoursBinding) {
-                ForEach(0..<24, id: \.self) { Text("\($0)").tag($0) }
-            }
-            .frame(maxWidth: .infinity)
-            .clipped()
-            Text("Hours")
-
             Picker("Minutes", selection: minutesBinding) {
                 ForEach(0..<60, id: \.self) { Text("\($0)").tag($0) }
             }
