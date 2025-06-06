@@ -11,33 +11,41 @@ import SwiftUI
 struct ExerciseDetailView: View {
     @Binding var exercise: Exercise
     @ObservedObject var model: ExerciseListViewModel
-    @State private var durationInSeconds: TimeInterval = 60 * 5
+
+    // Local state so edits do not immediately mutate the data model
+    @State private var editedName: String = ""
+    @State private var editedSets: Int = 3
+    @State private var durationInSeconds: TimeInterval = 60
 
     var body: some View {
         Form {
             Section("Name") {
-                TextField("Name", text: $exercise.name)
+                TextField("Name", text: $editedName)
                     .autocorrectionDisabled(false)
             }
             Section("Sets") {
-                Stepper(value: $exercise.sets, in: 1...10) {
-                    Text("\(exercise.sets) sets")
+                Stepper(value: $editedSets, in: 1...10) {
+                    Text("\(editedSets) sets")
                 }
             }
             Section("Rest") {
                 CountdownTimerPicker(duration: $durationInSeconds)
-                                .frame(maxWidth: .infinity)
-                                .clipped()
-                                .padding(.horizontal)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+                    .padding(.horizontal)
             }
         }
         .navigationTitle("Edit Exercise")
         .onAppear {
-            // Initialize the picker with the current value from the model
+            // Load existing values into local state
+            editedName = exercise.name
+            editedSets = exercise.sets
             durationInSeconds = exercise.restDuration
         }
         .onDisappear {
-            // Persist any changes back to the underlying Exercise
+            // Persist changes back to the bound exercise and update watch
+            exercise.name = editedName
+            exercise.sets = editedSets
             exercise.restDuration = durationInSeconds
             model.sendListToWatch()
         }
