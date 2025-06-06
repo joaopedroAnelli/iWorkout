@@ -29,15 +29,20 @@ struct ExerciseListView: View {
 
     var body: some View {
         List {
-            if model.list.isEmpty {
-                Text("You haven't added exercises yet")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-            } else {
-                ForEach($model.list) { $exercise in
-                    ExerciseRow(exercise: $exercise, model: model) {
-                        exerciseToDelete = exercise
-                        showDeleteConfirm = true
+            Section {
+                TextField("Session name", text: $model.session.name)
+            }
+            Section {
+                if model.list.isEmpty {
+                    Text("You haven't added exercises yet")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    ForEach($model.list) { $exercise in
+                        ExerciseRow(exercise: $exercise, model: model) {
+                            exerciseToDelete = exercise
+                            showDeleteConfirm = true
+                        }
                     }
                 }
             }
@@ -53,7 +58,7 @@ struct ExerciseListView: View {
                 Image(systemName: "plus")
             }
         }
-        .navigationTitle("My Workouts")
+        .navigationTitle(model.session.name)
         .alert("Delete exercise?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
             Button("Delete", role: .destructive) {
                 model.removeExercise(exercise)

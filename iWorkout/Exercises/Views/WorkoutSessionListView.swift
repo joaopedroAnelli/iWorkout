@@ -6,17 +6,22 @@ struct WorkoutSessionListView: View {
 
     var body: some View {
         List {
-            ForEach(viewModel.sessions) { session in
-                NavigationLink(session.name) {
-                    ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
-                        viewModel.updateSession(updated)
-                    })
-                }
-                .swipeActions {
-                    Button(role: .destructive) {
-                        viewModel.removeSession(session)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
+            Section {
+                TextField("Style name", text: $viewModel.style.name)
+            }
+            Section {
+                ForEach(viewModel.sessions) { session in
+                    NavigationLink(session.name) {
+                        ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
+                            viewModel.updateSession(updated)
+                        })
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            viewModel.removeSession(session)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
                     }
                 }
             }
