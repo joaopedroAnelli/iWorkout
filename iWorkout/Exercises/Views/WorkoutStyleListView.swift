@@ -3,6 +3,8 @@ import SwiftUI
 /// Root view listing all workout styles
 struct WorkoutStyleListView: View {
     @StateObject private var model = WorkoutStyleListViewModel()
+    @State private var showAddStyle = false
+    @State private var newStyleName = ""
 
     var body: some View {
         NavigationView {
@@ -20,16 +22,32 @@ struct WorkoutStyleListView: View {
             }
             .navigationTitle("Workouts")
             .toolbar {
-                Button(action: addStyle) {
+                Button(action: { showAddStyle = true }) {
                     Image(systemName: "plus")
                 }
             }
+            .sheet(isPresented: $showAddStyle) {
+                NavigationView {
+                    Form {
+                        TextField("Style name", text: $newStyleName)
+                    }
+                    .navigationTitle("New Style")
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { showAddStyle = false }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Add") {
+                                model.addStyle(newStyleName)
+                                showAddStyle = false
+                                newStyleName = ""
+                            }
+                            .disabled(newStyleName.isEmpty)
+                        }
+                    }
+                }
+            }
         }
-    }
-
-    private func addStyle() {
-        let title = String(format: NSLocalizedString("Style %d", comment: "Default style name"), model.styles.count + 1)
-        model.addStyle(title)
     }
 }
 
