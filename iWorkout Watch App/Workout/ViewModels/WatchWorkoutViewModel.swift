@@ -3,10 +3,10 @@ import SwiftUI
 import Combine
 
 class WatchWorkoutViewModel: ObservableObject {
-    @Published var styleIndex: Int = 0 {
+    @Published var styleIndex: Int {
         didSet { resetProgress() }
     }
-    @Published var sessionIndex: Int = 0 {
+    @Published var sessionIndex: Int {
         didSet { resetProgress() }
     }
     @Published var currentIndex: Int = 0
@@ -17,12 +17,18 @@ class WatchWorkoutViewModel: ObservableObject {
     private var timer: Timer?
     private var cancellable: AnyCancellable?
 
-    init() {
+    init(styleIndex: Int, sessionIndex: Int) {
+        self.styleIndex = styleIndex
+        self.sessionIndex = sessionIndex
         // forward updates from SharedData so the view refreshes when
         // the exercise list changes
         cancellable = shared.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
+    }
+
+    convenience init() {
+        self.init(styleIndex: 0, sessionIndex: 0)
     }
 
     func resetProgress() {
