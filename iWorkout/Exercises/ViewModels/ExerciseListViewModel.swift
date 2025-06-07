@@ -5,12 +5,10 @@ class ExerciseListViewModel: ObservableObject {
     private var styleIndex: Int = 0
     private var sessionIndex: Int = 0
     @Published var session: WorkoutSession {
-        didSet {
-            onUpdate(session)
-            sendListToWatch()
-        }
+        didSet { dirty = true }
     }
 
+    private var dirty = false
     private let onUpdate: (WorkoutSession) -> Void
 
     var list: [Exercise] {
@@ -21,7 +19,6 @@ class ExerciseListViewModel: ObservableObject {
     init(session: WorkoutSession, onUpdate: @escaping (WorkoutSession) -> Void) {
         self.session = session
         self.onUpdate = onUpdate
-        sendListToWatch()
     }
 
     convenience init() {
@@ -57,6 +54,14 @@ class ExerciseListViewModel: ObservableObject {
             updated.exercises.remove(at: index)
             session = updated
         }
+    }
+
+    /// Persist pending changes back to the parent model and watch
+    func commitIfNeeded() {
+        guard dirty else { return }
+        onUpdate(session)
+        sendListToWatch()
+        dirty = false
     }
 
     func sendListToWatch() {

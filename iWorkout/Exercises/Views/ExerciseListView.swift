@@ -17,6 +17,7 @@ struct ExerciseListView: View {
     @State private var newExerciseName = ""
     @State private var newExerciseSets: Int = 3
     @State private var newExerciseRest: TimeInterval = 60
+    @State private var selectedExerciseId: Exercise.ID?
 
     
     // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
@@ -42,9 +43,15 @@ struct ExerciseListView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     ForEach($model.list) { $exercise in
-                        ExerciseRow(exercise: $exercise, model: model) {
-                            exerciseToDelete = exercise
-                            showDeleteConfirm = true
+                        NavigationLink(
+                            tag: exercise.id,
+                            selection: $selectedExerciseId,
+                            destination: { ExerciseDetailView(exercise: $exercise, model: model) }
+                        ) {
+                            ExerciseRow(exercise: $exercise) {
+                                exerciseToDelete = exercise
+                                showDeleteConfirm = true
+                            }
                         }
                     }
                 }
@@ -114,6 +121,14 @@ struct ExerciseListView: View {
             }
         }
         .navigationTitle(model.session.name)
+        .onChange(of: selectedExerciseId) { newValue in
+            if newValue == nil { model.commitIfNeeded() }
+        }
+        .onDisappear {
+            if selectedExerciseId == nil && !showAddExercise && !showEditSession {
+                model.commitIfNeeded()
+            }
+        }
         .alert("Delete exercise?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
             Button("Delete", role: .destructive) {
                 model.removeExercise(exercise)
@@ -132,13 +147,10 @@ struct ExerciseListView_Previews: PreviewProvider {
 // A separate view for a single exercise row
 struct ExerciseRow: View {
     @Binding var exercise: Exercise
-    var model: ExerciseListViewModel
     var onDelete: () -> Void
 
     var body: some View {
-        NavigationLink(destination: ExerciseDetailView(exercise: $exercise, model: model)) {
-            Text(exercise.name)
-        }
+        Text(exercise.name)
         .swipeActions {
             Button(role: .destructive) {
                 onDelete()

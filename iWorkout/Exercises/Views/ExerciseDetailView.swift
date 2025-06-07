@@ -47,7 +47,6 @@ struct ExerciseDetailView: View {
             exercise.name = editedName
             exercise.sets = editedSets
             exercise.restDuration = durationInSeconds
-            model.sendListToWatch()
         }
     }
 }
