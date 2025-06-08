@@ -9,15 +9,21 @@ struct WorkoutStyleListView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(model.styles) { style in
-                    NavigationLink(style.name) {
-                        WorkoutSessionListView(viewModel: WorkoutSessionViewModel(style: style) { updated in
-                            model.updateStyle(updated)
-                        })
+                if model.styles.isEmpty {
+                    Text("You haven't added workouts yet")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    ForEach(model.styles) { style in
+                        NavigationLink(style.name) {
+                            WorkoutSessionListView(viewModel: WorkoutSessionViewModel(style: style) { updated in
+                                model.updateStyle(updated)
+                            })
+                        }
                     }
-                }
-                .onDelete { indexSet in
-                    model.styles.remove(atOffsets: indexSet)
+                    .onDelete { indexSet in
+                        model.styles.remove(atOffsets: indexSet)
+                    }
                 }
             }
             .navigationTitle("Workouts")

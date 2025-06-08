@@ -8,9 +8,15 @@ struct SessionListView: View {
     var body: some View {
         let style = shared.styles[styleIndex]
         List {
-            ForEach(style.sessions.indices, id: \.self) { idx in
-                NavigationLink(style.sessions[idx].name) {
-                    WorkoutView(styleIndex: styleIndex, sessionIndex: idx)
+            if style.sessions.isEmpty {
+                Text("You haven't added sessions yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                ForEach(style.sessions.indices, id: \.self) { idx in
+                    NavigationLink(style.sessions[idx].name) {
+                        WorkoutView(styleIndex: styleIndex, sessionIndex: idx)
+                    }
                 }
             }
         }

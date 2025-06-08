@@ -6,9 +6,15 @@ struct StyleListView: View {
 
     var body: some View {
         List {
-            ForEach(shared.styles.indices, id: \.self) { idx in
-                NavigationLink(shared.styles[idx].name) {
-                    SessionListView(styleIndex: idx)
+            if shared.styles.isEmpty {
+                Text("You haven't added workouts yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                ForEach(shared.styles.indices, id: \.self) { idx in
+                    NavigationLink(shared.styles[idx].name) {
+                        SessionListView(styleIndex: idx)
+                    }
                 }
             }
         }
