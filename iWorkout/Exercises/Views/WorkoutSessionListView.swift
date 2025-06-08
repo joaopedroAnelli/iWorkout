@@ -11,17 +11,23 @@ struct WorkoutSessionListView: View {
     var body: some View {
         List {
             Section {
-                ForEach(viewModel.sessions) { session in
-                    NavigationLink(session.name) {
-                        ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
-                            viewModel.updateSession(updated)
-                        })
-                    }
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            viewModel.removeSession(session)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
+                if viewModel.sessions.isEmpty {
+                    Text("You haven't added sessions yet")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    ForEach(viewModel.sessions) { session in
+                        NavigationLink(session.name) {
+                            ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
+                                viewModel.updateSession(updated)
+                            })
+                        }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                viewModel.removeSession(session)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
                         }
                     }
                 }
