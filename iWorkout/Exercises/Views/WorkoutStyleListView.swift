@@ -23,13 +23,6 @@ struct WorkoutStyleListView: View {
                             })
                         }
                         .swipeActions {
-                            Button {
-                                editingStyle = style
-                                editedStyleName = style.name
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            .tint(.yellow)
                             Button(role: .destructive) {
                                 if let idx = model.styles.firstIndex(of: style) {
                                     model.styles.remove(at: idx)
@@ -37,6 +30,13 @@ struct WorkoutStyleListView: View {
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                            Button {
+                                editingStyle = style
+                                editedStyleName = style.name
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(.yellow)
                         }
                     }
                 }

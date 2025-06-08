@@ -155,15 +155,15 @@ struct ExerciseRow: View {
     var body: some View {
         Text(exercise.name)
             .swipeActions {
-                Button { onEdit() } label: {
-                    Label("Edit", systemImage: "pencil")
-                }
-                .tint(.yellow)
                 Button(role: .destructive) {
                     onDelete()
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
+                Button { onEdit() } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+                .tint(.yellow)
             }
     }
 }
