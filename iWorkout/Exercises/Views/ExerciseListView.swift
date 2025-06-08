@@ -51,6 +51,8 @@ struct ExerciseListView: View {
                             ExerciseRow(exercise: $exercise) {
                                 exerciseToDelete = exercise
                                 showDeleteConfirm = true
+                            } onEdit: {
+                                selectedExerciseId = exercise.id
                             }
                         }
                     }
@@ -148,15 +150,20 @@ struct ExerciseListView_Previews: PreviewProvider {
 struct ExerciseRow: View {
     @Binding var exercise: Exercise
     var onDelete: () -> Void
+    var onEdit: () -> Void
 
     var body: some View {
         Text(exercise.name)
-        .swipeActions {
-            Button(role: .destructive) {
-                onDelete()
-            } label: {
-                Label("Delete", systemImage: "trash")
+            .swipeActions {
+                Button { onEdit() } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+                .tint(.yellow)
+                Button(role: .destructive) {
+                    onDelete()
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
-        }
     }
 }

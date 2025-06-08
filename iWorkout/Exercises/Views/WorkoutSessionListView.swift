@@ -7,6 +7,8 @@ struct WorkoutSessionListView: View {
     @State private var newSessionName = ""
     @State private var showEditStyle = false
     @State private var editedStyleName = ""
+    @State private var editingSession: WorkoutSession?
+    @State private var editedSessionName = ""
 
     var body: some View {
         List {
@@ -23,6 +25,13 @@ struct WorkoutSessionListView: View {
                             })
                         }
                         .swipeActions {
+                            Button {
+                                editingSession = session
+                                editedSessionName = session.name
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(.yellow)
                             Button(role: .destructive) {
                                 viewModel.removeSession(session)
                             } label: {
@@ -64,6 +73,28 @@ struct WorkoutSessionListView: View {
                             newSessionName = ""
                         }
                         .disabled(newSessionName.isEmpty)
+                    }
+                }
+            }
+        }
+        .sheet(item: $editingSession) { session in
+            NavigationView {
+                Form {
+                    TextField("Session name", text: $editedSessionName)
+                }
+                .navigationTitle("Edit Session")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { editingSession = nil }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            var updated = session
+                            updated.name = editedSessionName
+                            viewModel.updateSession(updated)
+                            editingSession = nil
+                        }
+                        .disabled(editedSessionName.isEmpty)
                     }
                 }
             }
