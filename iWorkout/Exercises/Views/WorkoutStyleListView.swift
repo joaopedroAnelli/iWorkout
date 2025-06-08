@@ -31,7 +31,7 @@ struct WorkoutStyleListView: View {
                 HStack {
                     Spacer()
                     Button("Add Workout") { showAddStyle = true }
-                        .padding(.vertical, 8)
+                        .padding(.vertical, 12)
                         .padding(.horizontal, 16)
                 }
                 .frame(maxWidth: .infinity)
