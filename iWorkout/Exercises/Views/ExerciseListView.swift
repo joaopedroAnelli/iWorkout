@@ -57,6 +57,8 @@ struct ExerciseListView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("DarkBackground"))
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button { showAddExercise = true } label: { Image(systemName: "plus") }
@@ -135,6 +137,7 @@ struct ExerciseListView: View {
             }
             Button("Cancel", role: .cancel) { }
         }
+        .toolbarBackground(Color("HeaderColor"), for: .navigationBar)
     }
 }
 

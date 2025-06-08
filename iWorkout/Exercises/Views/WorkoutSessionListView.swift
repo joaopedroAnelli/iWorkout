@@ -27,6 +27,8 @@ struct WorkoutSessionListView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("DarkBackground"))
         .navigationTitle(viewModel.style.name)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -82,6 +84,7 @@ struct WorkoutSessionListView: View {
                 }
             }
         }
+        .toolbarBackground(Color("HeaderColor"), for: .navigationBar)
     }
 }
 

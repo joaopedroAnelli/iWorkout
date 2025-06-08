@@ -12,7 +12,10 @@ struct StyleListView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("DarkBackground"))
         .navigationTitle("Workouts")
+        .toolbarBackground(Color("HeaderColor"), for: .navigationBar)
     }
 }
 

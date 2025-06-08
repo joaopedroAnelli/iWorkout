@@ -20,6 +20,8 @@ struct WorkoutStyleListView: View {
                     model.styles.remove(atOffsets: indexSet)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color("DarkBackground"))
             .navigationTitle("Workouts")
             .toolbar {
                 Button(action: { showAddStyle = true }) {
@@ -48,6 +50,7 @@ struct WorkoutStyleListView: View {
                 }
             }
         }
+        .toolbarBackground(Color("HeaderColor"), for: .navigationBar)
     }
 }
 

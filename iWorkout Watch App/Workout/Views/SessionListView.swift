@@ -14,7 +14,10 @@ struct SessionListView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Color("DarkBackground"))
         .navigationTitle(style.name)
+        .toolbarBackground(Color("HeaderColor"), for: .navigationBar)
     }
 }
 
