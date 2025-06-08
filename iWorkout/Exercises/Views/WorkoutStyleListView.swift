@@ -5,6 +5,8 @@ struct WorkoutStyleListView: View {
     @StateObject private var model = WorkoutStyleListViewModel()
     @State private var showAddStyle = false
     @State private var newStyleName = ""
+    @State private var editingStyle: WorkoutStyle?
+    @State private var editedStyleName = ""
 
     var body: some View {
         NavigationView {
@@ -20,9 +22,22 @@ struct WorkoutStyleListView: View {
                                 model.updateStyle(updated)
                             })
                         }
-                    }
-                    .onDelete { indexSet in
-                        model.styles.remove(atOffsets: indexSet)
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                if let idx = model.styles.firstIndex(of: style) {
+                                    model.styles.remove(at: idx)
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            Button {
+                                editingStyle = style
+                                editedStyleName = style.name
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(.yellow)
+                        }
                     }
                 }
             }
@@ -60,6 +75,26 @@ struct WorkoutStyleListView: View {
                                 newStyleName = ""
                             }
                             .disabled(newStyleName.isEmpty)
+                        }
+                    }
+                }
+            }
+            .sheet(item: $editingStyle) { style in
+                NavigationView {
+                    Form { TextField("Style name", text: $editedStyleName) }
+                    .navigationTitle("Edit Style")
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { editingStyle = nil }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Save") {
+                                if let idx = model.styles.firstIndex(of: style) {
+                                    model.styles[idx].name = editedStyleName
+                                }
+                                editingStyle = nil
+                            }
+                            .disabled(editedStyleName.isEmpty)
                         }
                     }
                 }
