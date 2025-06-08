@@ -36,7 +36,12 @@ struct WorkoutStyleListView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .background(.thinMaterial)
-                .shadow(color: .black.opacity(0.2), radius: 4, y: -2)
+                .overlay(
+                    Rectangle()
+                        .frame(height: 0.5)
+                        .foregroundColor(Color.gray.opacity(0.3)),
+                    alignment: .top
+                )
             }
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
