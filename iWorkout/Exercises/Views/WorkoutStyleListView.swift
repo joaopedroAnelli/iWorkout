@@ -28,8 +28,9 @@ struct WorkoutStyleListView: View {
             }
             .navigationTitle("Workouts")
             .toolbar {
-                Button(action: { showAddStyle = true }) {
-                    Image(systemName: "plus")
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Spacer()
+                    Button("Add Style") { showAddStyle = true }
                 }
             }
             .sheet(isPresented: $showAddStyle) {
