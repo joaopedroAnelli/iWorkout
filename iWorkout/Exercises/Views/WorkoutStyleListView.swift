@@ -27,11 +27,16 @@ struct WorkoutStyleListView: View {
                 }
             }
             .navigationTitle("Workouts")
-            .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
+            .safeAreaInset(edge: .bottom) {
+                HStack {
                     Spacer()
-                    Button("Add Style") { showAddStyle = true }
+                    Button("Add Workout") { showAddStyle = true }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 16)
                 }
+                .frame(maxWidth: .infinity)
+                .background(.thinMaterial)
+                .shadow(color: .black.opacity(0.2), radius: 4, y: -2)
             }
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
