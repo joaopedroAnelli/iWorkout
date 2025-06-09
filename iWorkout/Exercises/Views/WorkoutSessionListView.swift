@@ -24,11 +24,13 @@ struct WorkoutSessionListView: View {
                                 viewModel.updateSession(updated)
                             })
                         }
-                        .swipeActions {                            Button(role: .destructive) {
+                        .swipeActions {
+                            Button(role: .destructive) {
                                 viewModel.removeSession(session)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                            .tint(Color("AlertCoral"))
                             Button {
                                 editingSession = session
                                 editedSessionName = session.name

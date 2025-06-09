@@ -30,6 +30,7 @@ struct WorkoutStyleListView: View {
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                            .tint(Color("AlertCoral"))
                             Button {
                                 editingStyle = style
                                 editedStyleName = style.name
