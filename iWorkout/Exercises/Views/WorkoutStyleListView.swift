@@ -47,9 +47,9 @@ struct WorkoutStyleListView: View {
                 HStack {
                     Spacer()
                     Button("Add Workout") { showAddStyle = true }
-                        .padding(.vertical, 12)
+                        .padding(.vertical, 16)
                         .padding(.horizontal, 16)
-                }
+                }.background(.thinMaterial)
             }
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
