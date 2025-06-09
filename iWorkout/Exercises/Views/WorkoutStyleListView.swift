@@ -5,8 +5,12 @@ struct WorkoutStyleListView: View {
     @StateObject private var model = WorkoutStyleListViewModel()
     @State private var showAddStyle = false
     @State private var newStyleName = ""
+    @State private var newStyleActive = true
+    @State private var newActiveUntil = Date()
     @State private var editingStyle: WorkoutStyle?
     @State private var editedStyleName = ""
+    @State private var editedStyleActive = true
+    @State private var editedActiveUntil = Date()
 
     var body: some View {
         NavigationView {
@@ -34,6 +38,8 @@ struct WorkoutStyleListView: View {
                             Button {
                                 editingStyle = style
                                 editedStyleName = style.name
+                                editedStyleActive = style.isActive
+                                editedActiveUntil = style.activeUntil ?? Date()
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -53,9 +59,9 @@ struct WorkoutStyleListView: View {
             }
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
-                    Form {
-                        TextField("Style name", text: $newStyleName)
-                    }
+                    WorkoutStyleForm(name: $newStyleName,
+                                     isActive: $newStyleActive,
+                                     activeUntil: $newActiveUntil)
                     .navigationTitle("New Style")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -63,9 +69,13 @@ struct WorkoutStyleListView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Add") {
-                                model.addStyle(newStyleName)
+                                model.addStyle(newStyleName,
+                                               isActive: newStyleActive,
+                                               activeUntil: newStyleActive ? newActiveUntil : nil)
                                 showAddStyle = false
                                 newStyleName = ""
+                                newStyleActive = true
+                                newActiveUntil = Date()
                             }
                             .disabled(newStyleName.isEmpty)
                         }
@@ -74,7 +84,9 @@ struct WorkoutStyleListView: View {
             }
             .sheet(item: $editingStyle) { style in
                 NavigationView {
-                    Form { TextField("Style name", text: $editedStyleName) }
+                    WorkoutStyleForm(name: $editedStyleName,
+                                     isActive: $editedStyleActive,
+                                     activeUntil: $editedActiveUntil)
                     .navigationTitle("Edit Style")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -84,6 +96,8 @@ struct WorkoutStyleListView: View {
                             Button("Save") {
                                 if let idx = model.styles.firstIndex(of: style) {
                                     model.styles[idx].name = editedStyleName
+                                    model.styles[idx].isActive = editedStyleActive
+                                    model.styles[idx].activeUntil = editedStyleActive ? editedActiveUntil : nil
                                 }
                                 editingStyle = nil
                             }
