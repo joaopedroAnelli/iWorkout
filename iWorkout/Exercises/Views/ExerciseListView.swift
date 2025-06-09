@@ -135,6 +135,7 @@ struct ExerciseListView: View {
             Button("Delete", role: .destructive) {
                 model.removeExercise(exercise)
             }
+            .tint(Color("AlertCoral"))
             Button("Cancel", role: .cancel) { }
         }
     }
@@ -160,6 +161,7 @@ struct ExerciseRow: View {
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
+                .tint(Color("AlertCoral"))
                 Button { onEdit() } label: {
                     Label("Edit", systemImage: "pencil")
                 }
