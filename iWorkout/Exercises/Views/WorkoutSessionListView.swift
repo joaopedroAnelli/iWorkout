@@ -5,10 +5,14 @@ struct WorkoutSessionListView: View {
     @StateObject var viewModel: WorkoutSessionViewModel
     @State private var showAddSession = false
     @State private var newSessionName = ""
+    @State private var newRepetitions: Int = 1
+    @State private var newWeekday: Weekday = .monday
     @State private var showEditStyle = false
     @State private var editedStyleName = ""
     @State private var editingSession: WorkoutSession?
     @State private var editedSessionName = ""
+    @State private var editedRepetitions: Int = 1
+    @State private var editedWeekday: Weekday = .monday
 
     var body: some View {
         List {
@@ -34,6 +38,8 @@ struct WorkoutSessionListView: View {
                             Button {
                                 editingSession = session
                                 editedSessionName = session.name
+                                editedRepetitions = session.repetitions
+                                editedWeekday = session.weekday ?? .monday
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -68,6 +74,16 @@ struct WorkoutSessionListView: View {
             NavigationView {
                 Form {
                     TextField("Session name", text: $newSessionName)
+                    Stepper(value: $newRepetitions, in: 1...50) {
+                        Text("\(newRepetitions) " + NSLocalizedString("Repetitions", comment: ""))
+                    }
+                    if viewModel.style.sessionBy == .weekday {
+                        Picker("Weekday", selection: $newWeekday) {
+                            ForEach(Weekday.allCases) { day in
+                                Text(NSLocalizedString(day.rawValue.capitalized, comment: "")).tag(day)
+                            }
+                        }
+                    }
                 }
                 .navigationTitle("New Session")
                 .toolbar {
@@ -76,9 +92,11 @@ struct WorkoutSessionListView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Add") {
-                            viewModel.addSession(newSessionName)
+                            let weekday = viewModel.style.sessionBy == .weekday ? newWeekday : nil
+                            viewModel.addSession(newSessionName, repetitions: newRepetitions, weekday: weekday)
                             showAddSession = false
                             newSessionName = ""
+                            newRepetitions = 1
                         }
                         .disabled(newSessionName.isEmpty)
                     }
@@ -89,6 +107,16 @@ struct WorkoutSessionListView: View {
             NavigationView {
                 Form {
                     TextField("Session name", text: $editedSessionName)
+                    Stepper(value: $editedRepetitions, in: 1...50) {
+                        Text("\(editedRepetitions) " + NSLocalizedString("Repetitions", comment: ""))
+                    }
+                    if viewModel.style.sessionBy == .weekday {
+                        Picker("Weekday", selection: $editedWeekday) {
+                            ForEach(Weekday.allCases) { day in
+                                Text(NSLocalizedString(day.rawValue.capitalized, comment: "")).tag(day)
+                            }
+                        }
+                    }
                 }
                 .navigationTitle("Edit Session")
                 .toolbar {
@@ -99,6 +127,8 @@ struct WorkoutSessionListView: View {
                         Button("Save") {
                             var updated = session
                             updated.name = editedSessionName
+                            updated.repetitions = editedRepetitions
+                            updated.weekday = viewModel.style.sessionBy == .weekday ? editedWeekday : nil
                             viewModel.updateSession(updated)
                             editingSession = nil
                         }
