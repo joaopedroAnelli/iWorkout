@@ -62,7 +62,7 @@ struct WorkoutStyleListView: View {
                     WorkoutStyleForm(name: $newStyleName,
                                      isActive: $newStyleActive,
                                      activeUntil: $newActiveUntil)
-                    .navigationTitle("New Style")
+                    .navigationTitle("New Workout")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Cancel") { showAddStyle = false }
