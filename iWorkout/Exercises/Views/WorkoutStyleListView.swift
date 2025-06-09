@@ -49,14 +49,6 @@ struct WorkoutStyleListView: View {
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
                 }
-                .frame(maxWidth: .infinity)
-                .background(.thinMaterial)
-                .overlay(
-                    Rectangle()
-                        .frame(height: 0.5)
-                        .foregroundColor(Color.gray.opacity(0.3)),
-                    alignment: .top
-                )
             }
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
