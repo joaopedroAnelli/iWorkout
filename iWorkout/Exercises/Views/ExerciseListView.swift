@@ -59,14 +59,19 @@ struct ExerciseListView: View {
                 }
             }
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button { showAddExercise = true } label: { Image(systemName: "plus") }
-                Button {
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                Button("Add Exercise") { showAddExercise = true }
+                    .bold()
+                Spacer()
+                Button("Edit Session") {
                     sessionName = model.session.name
                     showEditSession = true
-                } label: { Image(systemName: "pencil") }
+                }
             }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+            .background(.thinMaterial)
         }
         .sheet(isPresented: $showAddExercise) {
             NavigationView {

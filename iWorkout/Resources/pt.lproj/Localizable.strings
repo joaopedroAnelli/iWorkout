@@ -21,12 +21,13 @@
 "Session Name" = "Nome da divisão";
 "Sessions" = "Divisões";
 "Workouts" = "Treinos";
-"Edit Style" = "Editar Estilo";
+"Edit Style" = "Editar Treino";
 "Edit Session" = "Editar Sessão";
 "New Exercise" = "Novo Exercício";
 "Send to Apple Watch?" = "Enviar para o Apple Watch?";
 "Send" = "Enviar";
 "Add Workout" = "Adicionar Treino";
+"Add Exercise" = "Adicionar Exercício";
 "Edit" = "Editar";
 "Add Session" = "Adicionar Divisão";
 "Edit Workout" = "Editar Treino";
