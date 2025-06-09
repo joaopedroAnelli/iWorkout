@@ -45,17 +45,23 @@ struct WorkoutSessionListView: View {
             }
         }
         .navigationTitle(viewModel.style.name)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: { showAddSession = true }) {
-                    Image(systemName: "plus")
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                Button(NSLocalizedString("Add Session", comment: "")) {
+                    showAddSession = true
                 }
-                Button(action: {
+                .fontWeight(.bold)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+
+                Spacer()
+
+                Button(NSLocalizedString("Edit Workout", comment: "")) {
                     editedStyleName = viewModel.style.name
                     showEditStyle = true
-                }) {
-                    Image(systemName: "pencil")
                 }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
             }
         }
         .sheet(isPresented: $showAddSession) {
