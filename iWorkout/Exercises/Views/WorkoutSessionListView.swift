@@ -7,6 +7,7 @@ struct WorkoutSessionListView: View {
     @State private var newSessionName = ""
     @State private var showEditStyle = false
     @State private var editedStyleName = ""
+    @State private var editedStyleNavigation = SessionNavigation.weekday
     @State private var editedStyleActive = true
     @State private var editedActiveUntil = Date()
     @State private var editingSession: WorkoutSession?
@@ -60,6 +61,7 @@ struct WorkoutSessionListView: View {
 
                 Button(NSLocalizedString("Edit Workout", comment: "")) {
                     editedStyleName = viewModel.style.name
+                    editedStyleNavigation = viewModel.style.navigation
                     editedStyleActive = viewModel.style.isActive
                     editedActiveUntil = viewModel.style.activeUntil ?? Date()
                     showEditStyle = true
@@ -114,6 +116,7 @@ struct WorkoutSessionListView: View {
         .sheet(isPresented: $showEditStyle) {
             NavigationView {
                 WorkoutStyleForm(name: $editedStyleName,
+                                 navigation: $editedStyleNavigation,
                                  isActive: $editedStyleActive,
                                  activeUntil: $editedActiveUntil)
                 .navigationTitle("Edit Style")
@@ -124,6 +127,7 @@ struct WorkoutSessionListView: View {
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Save") {
                             viewModel.style.name = editedStyleName
+                            viewModel.style.navigation = editedStyleNavigation
                             viewModel.style.isActive = editedStyleActive
                             viewModel.style.activeUntil = editedStyleActive ? editedActiveUntil : nil
                             showEditStyle = false

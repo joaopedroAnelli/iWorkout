@@ -16,10 +16,12 @@ class WorkoutStyleListViewModel: ObservableObject {
     }
 
     func addStyle(_ name: String,
+                  navigation: SessionNavigation = .weekday,
                   isActive: Bool = true,
                   activeUntil: Date? = nil) {
         styles.append(WorkoutStyle(name: name,
                                    sessions: [],
+                                   navigation: navigation,
                                    isActive: isActive,
                                    activeUntil: activeUntil))
     }

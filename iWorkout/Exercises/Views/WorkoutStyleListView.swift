@@ -5,10 +5,12 @@ struct WorkoutStyleListView: View {
     @StateObject private var model = WorkoutStyleListViewModel()
     @State private var showAddStyle = false
     @State private var newStyleName = ""
+    @State private var newStyleNavigation = SessionNavigation.weekday
     @State private var newStyleActive = true
     @State private var newActiveUntil = Date()
     @State private var editingStyle: WorkoutStyle?
     @State private var editedStyleName = ""
+    @State private var editedStyleNavigation = SessionNavigation.weekday
     @State private var editedStyleActive = true
     @State private var editedActiveUntil = Date()
 
@@ -38,6 +40,7 @@ struct WorkoutStyleListView: View {
                             Button {
                                 editingStyle = style
                                 editedStyleName = style.name
+                                editedStyleNavigation = style.navigation
                                 editedStyleActive = style.isActive
                                 editedActiveUntil = style.activeUntil ?? Date()
                             } label: {
@@ -60,8 +63,13 @@ struct WorkoutStyleListView: View {
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
                     WorkoutStyleForm(name: $newStyleName,
+                                     navigation: $newStyleNavigation,
                                      isActive: $newStyleActive,
                                      activeUntil: $newActiveUntil)
+                                               navigation: newStyleNavigation,
+                                newStyleNavigation = .weekday
+                                     navigation: $editedStyleNavigation,
+                                    model.styles[idx].navigation = editedStyleNavigation
                     .navigationTitle("New Workout")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
