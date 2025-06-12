@@ -47,8 +47,10 @@ struct WorkoutSessionListView: View {
         .navigationTitle(viewModel.style.name)
         .safeAreaInset(edge: .bottom) {
             HStack {
-                Button(NSLocalizedString("Add Session", comment: "")) {
+                Button {
                     showAddSession = true
+                } label: {
+                    Image(systemName: "plus")
                 }
                 .fontWeight(.bold)
                 .padding(.vertical, 12)
@@ -56,9 +58,11 @@ struct WorkoutSessionListView: View {
 
                 Spacer()
 
-                Button(NSLocalizedString("Edit Workout", comment: "")) {
+                Button {
                     editedStyleName = viewModel.style.name
                     showEditStyle = true
+                } label: {
+                    Image(systemName: "pencil")
                 }
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
@@ -72,14 +76,19 @@ struct WorkoutSessionListView: View {
                 .navigationTitle("New Session")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showAddSession = false }
+                        Button { showAddSession = false } label: {
+                            Image(systemName: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Add") {
+                        Button {
                             viewModel.addSession(newSessionName)
                             showAddSession = false
                             newSessionName = ""
+                        } label: {
+                            Image(systemName: "plus")
                         }
+                        .buttonStyle(.borderedProminent)
                         .disabled(newSessionName.isEmpty)
                     }
                 }
@@ -93,15 +102,20 @@ struct WorkoutSessionListView: View {
                 .navigationTitle("Edit Session")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { editingSession = nil }
+                        Button { editingSession = nil } label: {
+                            Image(systemName: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
+                        Button {
                             var updated = session
                             updated.name = editedSessionName
                             viewModel.updateSession(updated)
                             editingSession = nil
+                        } label: {
+                            Image(systemName: "checkmark")
                         }
+                        .buttonStyle(.borderedProminent)
                         .disabled(editedSessionName.isEmpty)
                     }
                 }
@@ -115,13 +129,18 @@ struct WorkoutSessionListView: View {
                 .navigationTitle("Edit Style")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showEditStyle = false }
+                        Button { showEditStyle = false } label: {
+                            Image(systemName: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
+                        Button {
                             viewModel.style.name = editedStyleName
                             showEditStyle = false
+                        } label: {
+                            Image(systemName: "checkmark")
                         }
+                        .buttonStyle(.borderedProminent)
                         .disabled(editedStyleName.isEmpty)
                     }
                 }

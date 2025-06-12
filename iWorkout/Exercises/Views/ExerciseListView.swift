@@ -61,12 +61,16 @@ struct ExerciseListView: View {
         }
         .safeAreaInset(edge: .bottom) {
             HStack {
-                Button("Add Exercise") { showAddExercise = true }
-                    .bold()
+                Button { showAddExercise = true } label: {
+                    Image(systemName: "plus")
+                }
+                .bold()
                 Spacer()
-                Button("Edit Session") {
+                Button {
                     sessionName = model.session.name
                     showEditSession = true
+                } label: {
+                    Image(systemName: "pencil")
                 }
             }
             .padding(.vertical, 16)
@@ -92,16 +96,21 @@ struct ExerciseListView: View {
                 .navigationTitle("New Exercise")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showAddExercise = false }
+                        Button { showAddExercise = false } label: {
+                            Image(systemName: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Add") {
+                        Button {
                             model.addExercise(name: newExerciseName, sets: newExerciseSets, restDuration: newExerciseRest)
                             showAddExercise = false
                             newExerciseName = ""
                             newExerciseSets = 3
                             newExerciseRest = 60
+                        } label: {
+                            Image(systemName: "plus")
                         }
+                        .buttonStyle(.borderedProminent)
                         .disabled(newExerciseName.isEmpty)
                     }
                 }
@@ -115,13 +124,18 @@ struct ExerciseListView: View {
                 .navigationTitle("Edit Session")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showEditSession = false }
+                        Button { showEditSession = false } label: {
+                            Image(systemName: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
+                        Button {
                             model.session.name = sessionName
                             showEditSession = false
+                        } label: {
+                            Image(systemName: "checkmark")
                         }
+                        .buttonStyle(.borderedProminent)
                         .disabled(sessionName.isEmpty)
                     }
                 }
@@ -137,11 +151,15 @@ struct ExerciseListView: View {
             }
         }
         .alert("Delete exercise?", isPresented: $showDeleteConfirm, presenting: exerciseToDelete) { exercise in
-            Button("Delete", role: .destructive) {
+            Button(role: .destructive) {
                 model.removeExercise(exercise)
+            } label: {
+                Image(systemName: "trash")
             }
             .tint(Color("AlertCoral"))
-            Button("Cancel", role: .cancel) { }
+            Button(role: .cancel) { } label: {
+                Image(systemName: "xmark")
+            }
         }
     }
 }

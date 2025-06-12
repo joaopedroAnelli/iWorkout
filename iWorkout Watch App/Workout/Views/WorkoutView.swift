@@ -27,9 +27,12 @@ struct WorkoutView: View {
                     Text(session.exercises[viewModel.currentIndex].name)
                         .font(.headline)
                         .padding()
-                    Button("Next") {
+                    Button {
                         viewModel.nextExercise()
+                    } label: {
+                        Image(systemName: "arrow.right")
                     }
+                    .buttonStyle(.borderedProminent)
                     .padding(.top, 10)
                 } else {
                     Text("No exercise")
