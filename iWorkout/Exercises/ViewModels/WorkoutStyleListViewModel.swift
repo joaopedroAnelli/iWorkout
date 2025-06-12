@@ -15,8 +15,15 @@ class WorkoutStyleListViewModel: ObservableObject {
         load()
     }
 
-    func addStyle(_ name: String) {
-        styles.append(WorkoutStyle(name: name))
+    func addStyle(_ name: String,
+                  navigation: SessionNavigation = .weekday,
+                  isActive: Bool = true,
+                  activeUntil: Date? = nil) {
+        styles.append(WorkoutStyle(name: name,
+                                   sessions: [],
+                                   navigation: navigation,
+                                   isActive: isActive,
+                                   activeUntil: activeUntil))
     }
 
     func updateStyle(_ style: WorkoutStyle) {
