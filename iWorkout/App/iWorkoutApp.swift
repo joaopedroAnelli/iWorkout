@@ -21,11 +21,16 @@ struct iWorkoutApp: App {
                 .onShake { showSendConfirm = true }
                 .alert(NSLocalizedString("Send to Apple Watch?", comment: ""),
                        isPresented: $showSendConfirm) {
-                    Button(NSLocalizedString("Send", comment: "")) {
+                    Button {
                         SharedData.shared.sendStyles(SharedData.shared.styles)
+                    } label: {
+                        Image(systemName: "paperplane.fill")
                     }
-                    Button(NSLocalizedString("Cancel", comment: ""),
-                           role: .cancel) { }
+                    .buttonStyle(.borderedProminent)
+                    Button(role: .cancel) {
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
                 }
         }
     }

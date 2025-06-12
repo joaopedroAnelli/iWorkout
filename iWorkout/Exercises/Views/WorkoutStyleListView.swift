@@ -46,7 +46,9 @@ struct WorkoutStyleListView: View {
             .safeAreaInset(edge: .bottom) {
                 HStack {
                     Spacer()
-                    Button("Add Workout") { showAddStyle = true }
+                    Button { showAddStyle = true } label: {
+                        Image(systemName: "plus")
+                    }
                         .padding(.vertical, 16)
                         .padding(.horizontal, 16)
                 }.background(.thinMaterial)
@@ -59,14 +61,19 @@ struct WorkoutStyleListView: View {
                     .navigationTitle("New Style")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") { showAddStyle = false }
+                            Button { showAddStyle = false } label: {
+                                Image(systemName: "xmark")
+                            }
                         }
                         ToolbarItem(placement: .confirmationAction) {
-                            Button("Add") {
+                            Button {
                                 model.addStyle(newStyleName)
                                 showAddStyle = false
                                 newStyleName = ""
+                            } label: {
+                                Image(systemName: "plus")
                             }
+                            .buttonStyle(.borderedProminent)
                             .disabled(newStyleName.isEmpty)
                         }
                     }
@@ -78,15 +85,20 @@ struct WorkoutStyleListView: View {
                     .navigationTitle("Edit Style")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") { editingStyle = nil }
+                            Button { editingStyle = nil } label: {
+                                Image(systemName: "xmark")
+                            }
                         }
                         ToolbarItem(placement: .confirmationAction) {
-                            Button("Save") {
+                            Button {
                                 if let idx = model.styles.firstIndex(of: style) {
                                     model.styles[idx].name = editedStyleName
                                 }
                                 editingStyle = nil
+                            } label: {
+                                Image(systemName: "checkmark")
                             }
+                            .buttonStyle(.borderedProminent)
                             .disabled(editedStyleName.isEmpty)
                         }
                     }
