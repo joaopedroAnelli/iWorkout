@@ -43,14 +43,13 @@ struct WorkoutStyleListView: View {
                 }
             }
             .navigationTitle("Workouts")
-            .safeAreaInset(edge: .bottom) {
-                HStack {
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
                     Button("Add Workout") { showAddStyle = true }
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 16)
-                }.background(.thinMaterial)
+                }
             }
+            .toolbarBackground(.thinMaterial, for: .bottomBar)
             .sheet(isPresented: $showAddStyle) {
                 NavigationView {
                     Form {

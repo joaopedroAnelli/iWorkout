@@ -59,8 +59,8 @@ struct ExerciseListView: View {
                 }
             }
         }
-        .safeAreaInset(edge: .bottom) {
-            HStack {
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
                 Button("Add Exercise") { showAddExercise = true }
                     .bold()
                 Spacer()
@@ -69,10 +69,8 @@ struct ExerciseListView: View {
                     showEditSession = true
                 }
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 16)
-            .background(.thinMaterial)
         }
+        .toolbarBackground(.thinMaterial, for: .bottomBar)
         .sheet(isPresented: $showAddExercise) {
             NavigationView {
                 Form {

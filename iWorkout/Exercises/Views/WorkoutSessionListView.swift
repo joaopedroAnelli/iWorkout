@@ -45,14 +45,12 @@ struct WorkoutSessionListView: View {
             }
         }
         .navigationTitle(viewModel.style.name)
-        .safeAreaInset(edge: .bottom) {
-            HStack {
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
                 Button(NSLocalizedString("Add Session", comment: "")) {
                     showAddSession = true
                 }
                 .fontWeight(.bold)
-                .padding(.vertical, 12)
-                .padding(.horizontal, 16)
 
                 Spacer()
 
@@ -60,10 +58,9 @@ struct WorkoutSessionListView: View {
                     editedStyleName = viewModel.style.name
                     showEditStyle = true
                 }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 16)
             }
         }
+        .toolbarBackground(.thinMaterial, for: .bottomBar)
         .sheet(isPresented: $showAddSession) {
             NavigationView {
                 Form {
