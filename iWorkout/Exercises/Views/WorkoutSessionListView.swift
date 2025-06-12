@@ -47,17 +47,21 @@ struct WorkoutSessionListView: View {
         .navigationTitle(viewModel.style.name)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button(NSLocalizedString("Add Session", comment: "")) {
-                    showAddSession = true
+                Button {
+                    editedStyleName = viewModel.style.name
+                    showEditStyle = true
+                } label: {
+                    Label(NSLocalizedString("Edit Workout", comment: ""), systemImage: "pencil")
                 }
-                .fontWeight(.bold)
 
                 Spacer()
 
-                Button(NSLocalizedString("Edit Workout", comment: "")) {
-                    editedStyleName = viewModel.style.name
-                    showEditStyle = true
+                Button {
+                    showAddSession = true
+                } label: {
+                    Label(NSLocalizedString("Add Session", comment: ""), systemImage: "plus")
                 }
+                .fontWeight(.bold)
             }
         }
         .sheet(isPresented: $showAddSession) {
@@ -68,15 +72,20 @@ struct WorkoutSessionListView: View {
                 .navigationTitle("New Session")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showAddSession = false }
+                        Button { showAddSession = false } label: {
+                            Label("Cancel", systemImage: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Add") {
+                        Button {
                             viewModel.addSession(newSessionName)
                             showAddSession = false
                             newSessionName = ""
+                        } label: {
+                            Label("Add", systemImage: "plus")
                         }
                         .disabled(newSessionName.isEmpty)
+                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -89,16 +98,21 @@ struct WorkoutSessionListView: View {
                 .navigationTitle("Edit Session")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { editingSession = nil }
+                        Button { editingSession = nil } label: {
+                            Label("Cancel", systemImage: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
+                        Button {
                             var updated = session
                             updated.name = editedSessionName
                             viewModel.updateSession(updated)
                             editingSession = nil
+                        } label: {
+                            Label("Save", systemImage: "checkmark")
                         }
                         .disabled(editedSessionName.isEmpty)
+                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -111,14 +125,19 @@ struct WorkoutSessionListView: View {
                 .navigationTitle("Edit Style")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showEditStyle = false }
+                        Button { showEditStyle = false } label: {
+                            Label("Cancel", systemImage: "xmark")
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
+                        Button {
                             viewModel.style.name = editedStyleName
                             showEditStyle = false
+                        } label: {
+                            Label("Save", systemImage: "checkmark")
                         }
                         .disabled(editedStyleName.isEmpty)
+                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
