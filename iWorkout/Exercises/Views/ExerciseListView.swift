@@ -19,46 +19,16 @@ struct ExerciseListView: View {
     @State private var newExerciseRest: TimeInterval = 60
     @State private var selectedExerciseId: Exercise.ID?
 
-    
-    // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
-    private func formattedTime(_ interval: TimeInterval) -> String {
-        let totalSeconds = Int(interval)
-        let hours = totalSeconds / 3600
-        let minutes = (totalSeconds % 3600) / 60
-        let seconds = (totalSeconds % 60)
-        
-        if hours > 0 {
-            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            return String(format: "%02d:%02d", minutes, seconds)
-        }
-    }
-
     var body: some View {
-        List {
-            Section {
-                if model.list.isEmpty {
-                    Text("You haven't added exercises yet")
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                } else {
-                    ForEach($model.list) { $exercise in
-                        NavigationLink(
-                            tag: exercise.id,
-                            selection: $selectedExerciseId,
-                            destination: { ExerciseDetailView(exercise: $exercise, model: model) }
-                        ) {
-                            ExerciseRow(exercise: $exercise) {
+        ExerciseListSection(model: model,
+                            selectedExerciseId: $selectedExerciseId,
+                            onDelete: { exercise in
                                 exerciseToDelete = exercise
                                 showDeleteConfirm = true
-                            } onEdit: {
-                                selectedExerciseId = exercise.id
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                            },
+                            onEdit: { id in
+                                selectedExerciseId = id
+                            })
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
                 Button {
@@ -75,68 +45,16 @@ struct ExerciseListView: View {
             }
         }
         .sheet(isPresented: $showAddExercise) {
-            NavigationStack {
-                Form {
-                    Section("Name") { TextField("Name", text: $newExerciseName) }
-                    Section("Sets") {
-                        Stepper(value: $newExerciseSets, in: 1...10) {
-                            Text("\(newExerciseSets) sets")
-                        }
-                    }
-                    Section("Rest") {
-                        CountdownTimerPicker(duration: $newExerciseRest)
-                            .frame(maxWidth: .infinity)
-                            .clipped()
-                            .padding(.horizontal)
-                    }
-                }
-                .navigationTitle("New Exercise")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button { showAddExercise = false } label: {
-                            Label("Cancel", systemImage: "xmark")
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button {
-                            model.addExercise(name: newExerciseName, sets: newExerciseSets, restDuration: newExerciseRest)
-                            showAddExercise = false
-                            newExerciseName = ""
-                            newExerciseSets = 3
-                            newExerciseRest = 60
-                        } label: {
-                            Label("Add", systemImage: "plus")
-                        }
-                        .disabled(newExerciseName.isEmpty)
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
-            }
+            AddExerciseSheet(model: model,
+                             name: $newExerciseName,
+                             sets: $newExerciseSets,
+                             rest: $newExerciseRest,
+                             isPresented: $showAddExercise)
         }
         .sheet(isPresented: $showEditSession) {
-            NavigationStack {
-                Form {
-                    TextField("Session name", text: $sessionName)
-                }
-                .navigationTitle("Edit Session")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button { showEditSession = false } label: {
-                            Label("Cancel", systemImage: "xmark")
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button {
-                            model.session.name = sessionName
-                            showEditSession = false
-                        } label: {
-                            Label("Save", systemImage: "checkmark")
-                        }
-                        .disabled(sessionName.isEmpty)
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
-            }
+            EditSessionSheet(model: model,
+                             name: $sessionName,
+                             isPresented: $showEditSession)
         }
         .navigationTitle(model.session.name)
         .onChange(of: selectedExerciseId) { newValue in
@@ -187,5 +105,121 @@ struct ExerciseRow: View {
                 }
                 .tint(.yellow)
             }
+    }
+}
+
+/// Displays the list of exercises with navigation links
+private struct ExerciseListSection: View {
+    @ObservedObject var model: ExerciseListViewModel
+    @Binding var selectedExerciseId: Exercise.ID?
+    var onDelete: (Exercise) -> Void
+    var onEdit: (Exercise.ID) -> Void
+
+    var body: some View {
+        List {
+            Section {
+                if model.list.isEmpty {
+                    Text("You haven't added exercises yet")
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    ForEach($model.list) { $exercise in
+                        NavigationLink(
+                            tag: exercise.id,
+                            selection: $selectedExerciseId,
+                            destination: {
+                                ExerciseDetailView(exercise: $exercise, model: model)
+                            }
+                        ) {
+                            ExerciseRow(exercise: $exercise) {
+                                onDelete(exercise)
+                            } onEdit: {
+                                onEdit(exercise.id)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Sheet used to create a new exercise
+private struct AddExerciseSheet: View {
+    @ObservedObject var model: ExerciseListViewModel
+    @Binding var name: String
+    @Binding var sets: Int
+    @Binding var rest: TimeInterval
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Name") { TextField("Name", text: $name) }
+                Section("Sets") {
+                    Stepper(value: $sets, in: 1...10) {
+                        Text("\(sets) sets")
+                    }
+                }
+                Section("Rest") {
+                    CountdownTimerPicker(duration: $rest)
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+                        .padding(.horizontal)
+                }
+            }
+            .navigationTitle("New Exercise")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button { isPresented = false } label: {
+                        Label("Cancel", systemImage: "xmark")
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        model.addExercise(name: name, sets: sets, restDuration: rest)
+                        isPresented = false
+                        name = ""
+                        sets = 3
+                        rest = 60
+                    } label: {
+                        Label("Add", systemImage: "plus")
+                    }
+                    .disabled(name.isEmpty)
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+        }
+    }
+}
+
+/// Sheet used to edit the workout session name
+private struct EditSessionSheet: View {
+    @ObservedObject var model: ExerciseListViewModel
+    @Binding var name: String
+    @Binding var isPresented: Bool
+
+    var body: some View {
+        NavigationStack {
+            Form { TextField("Session name", text: $name) }
+            .navigationTitle("Edit Session")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button { isPresented = false } label: {
+                        Label("Cancel", systemImage: "xmark")
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        model.session.name = name
+                        isPresented = false
+                    } label: {
+                        Label("Save", systemImage: "checkmark")
+                    }
+                    .disabled(name.isEmpty)
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+        }
     }
 }
