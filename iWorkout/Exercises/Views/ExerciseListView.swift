@@ -19,124 +19,42 @@ struct ExerciseListView: View {
     @State private var newExerciseRest: TimeInterval = 60
     @State private var selectedExerciseId: Exercise.ID?
 
-    
-    // Função auxiliar para formatar TimeInterval em "HH:mm:ss" ou "mm:ss"
-    private func formattedTime(_ interval: TimeInterval) -> String {
-        let totalSeconds = Int(interval)
-        let hours = totalSeconds / 3600
-        let minutes = (totalSeconds % 3600) / 60
-        let seconds = (totalSeconds % 60)
-        
-        if hours > 0 {
-            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            return String(format: "%02d:%02d", minutes, seconds)
-        }
-    }
-
     var body: some View {
         List {
-            Section {
-                if model.list.isEmpty {
-                    Text("You haven't added exercises yet")
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                } else {
-                    ForEach($model.list) { $exercise in
-                        NavigationLink(
-                            tag: exercise.id,
-                            selection: $selectedExerciseId,
-                            destination: { ExerciseDetailView(exercise: $exercise, model: model) }
-                        ) {
-                            ExerciseRow(exercise: $exercise) {
+            ExercisesSection(exercises: $model.list,
+                             selectedExerciseId: $selectedExerciseId,
+                             model: model,
+                             onDelete: { exercise in
                                 exerciseToDelete = exercise
                                 showDeleteConfirm = true
-                            } onEdit: {
-                                selectedExerciseId = exercise.id
-                            }
-                        }
-                    }
-                }
-            }
+                             },
+                             onEdit: { id in
+                                selectedExerciseId = id
+                             })
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
-                Button {
-                    sessionName = model.session.name
-                    showEditSession = true
-                } label: {
-                    Label("Edit Session", systemImage: "pencil")
-                }
-                Spacer()
-                Button { showAddExercise = true } label: {
-                    Label("Add Exercise", systemImage: "plus")
-                }
-                .bold()
-            }
-        }
+        .toolbar { toolbarContent }
         .sheet(isPresented: $showAddExercise) {
-            NavigationView {
-                Form {
-                    Section("Name") { TextField("Name", text: $newExerciseName) }
-                    Section("Sets") {
-                        Stepper(value: $newExerciseSets, in: 1...10) {
-                            Text("\(newExerciseSets) sets")
-                        }
-                    }
-                    Section("Rest") {
-                        CountdownTimerPicker(duration: $newExerciseRest)
-                            .frame(maxWidth: .infinity)
-                            .clipped()
-                            .padding(.horizontal)
-                    }
-                }
-                .navigationTitle("New Exercise")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button { showAddExercise = false } label: {
-                            Label("Cancel", systemImage: "xmark")
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button {
-                            model.addExercise(name: newExerciseName, sets: newExerciseSets, restDuration: newExerciseRest)
-                            showAddExercise = false
-                            newExerciseName = ""
-                            newExerciseSets = 3
-                            newExerciseRest = 60
-                        } label: {
-                            Label("Add", systemImage: "plus")
-                        }
-                        .disabled(newExerciseName.isEmpty)
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
-            }
+            AddExerciseSheet(name: $newExerciseName,
+                             sets: $newExerciseSets,
+                             rest: $newExerciseRest,
+                             onCancel: { showAddExercise = false },
+                             onAdd: {
+                                model.addExercise(name: newExerciseName,
+                                                  sets: newExerciseSets,
+                                                  restDuration: newExerciseRest)
+                                showAddExercise = false
+                                newExerciseName = ""
+                                newExerciseSets = 3
+                                newExerciseRest = 60
+                             })
         }
         .sheet(isPresented: $showEditSession) {
-            NavigationView {
-                Form {
-                    TextField("Session name", text: $sessionName)
-                }
-                .navigationTitle("Edit Session")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button { showEditSession = false } label: {
-                            Label("Cancel", systemImage: "xmark")
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button {
-                            model.session.name = sessionName
-                            showEditSession = false
-                        } label: {
-                            Label("Save", systemImage: "checkmark")
-                        }
-                        .disabled(sessionName.isEmpty)
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
-            }
+            EditSessionSheet(name: $sessionName,
+                             onCancel: { showEditSession = false },
+                             onSave: {
+                                model.session.name = sessionName
+                                showEditSession = false
+                             })
         }
         .navigationTitle(model.session.name)
         .onChange(of: selectedExerciseId) { newValue in
@@ -187,5 +105,123 @@ struct ExerciseRow: View {
                 }
                 .tint(.yellow)
             }
+    }
+}
+
+private struct ExercisesSection: View {
+    @Binding var exercises: [Exercise]
+    @Binding var selectedExerciseId: Exercise.ID?
+    var model: ExerciseListViewModel
+    var onDelete: (Exercise) -> Void
+    var onEdit: (Exercise.ID) -> Void
+
+    var body: some View {
+        Section {
+            if exercises.isEmpty {
+                Text("You haven't added exercises yet")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                ForEach($exercises) { $exercise in
+                    NavigationLink(
+                        tag: exercise.id,
+                        selection: $selectedExerciseId,
+                        destination: { ExerciseDetailView(exercise: $exercise, model: model) }
+                    ) {
+                        ExerciseRow(exercise: $exercise) {
+                            onDelete(exercise)
+                        } onEdit: {
+                            onEdit(exercise.id)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct AddExerciseSheet: View {
+    @Binding var name: String
+    @Binding var sets: Int
+    @Binding var rest: TimeInterval
+    var onCancel: () -> Void
+    var onAdd: () -> Void
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section("Name") { TextField("Name", text: $name) }
+                Section("Sets") {
+                    Stepper(value: $sets, in: 1...10) {
+                        Text("\(sets) sets")
+                    }
+                }
+                Section("Rest") {
+                    CountdownTimerPicker(duration: $rest)
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+                        .padding(.horizontal)
+                }
+            }
+            .navigationTitle("New Exercise")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: onCancel) {
+                        Label("Cancel", systemImage: "xmark")
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(action: onAdd) {
+                        Label("Add", systemImage: "plus")
+                    }
+                    .disabled(name.isEmpty)
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+        }
+    }
+}
+
+private struct EditSessionSheet: View {
+    @Binding var name: String
+    var onCancel: () -> Void
+    var onSave: () -> Void
+
+    var body: some View {
+        NavigationView {
+            Form { TextField("Session name", text: $name) }
+                .navigationTitle("Edit Session")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: onCancel) {
+                            Label("Cancel", systemImage: "xmark")
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(action: onSave) {
+                            Label("Save", systemImage: "checkmark")
+                        }
+                        .disabled(name.isEmpty)
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+        }
+    }
+}
+
+@ToolbarContentBuilder
+private var toolbarContent: some ToolbarContent {
+    ToolbarItemGroup(placement: .bottomBar) {
+        Button {
+            sessionName = model.session.name
+            showEditSession = true
+        } label: {
+            Label("Edit Session", systemImage: "pencil")
+        }
+        Spacer()
+        Button { showAddExercise = true } label: {
+            Label("Add Exercise", systemImage: "plus")
+        }
+        .bold()
     }
 }
