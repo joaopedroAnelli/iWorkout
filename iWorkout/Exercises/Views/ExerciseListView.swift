@@ -75,7 +75,7 @@ struct ExerciseListView: View {
             }
         }
         .sheet(isPresented: $showAddExercise) {
-            NavigationView {
+            NavigationStack {
                 Form {
                     Section("Name") { TextField("Name", text: $newExerciseName) }
                     Section("Sets") {
@@ -114,7 +114,7 @@ struct ExerciseListView: View {
             }
         }
         .sheet(isPresented: $showEditSession) {
-            NavigationView {
+            NavigationStack {
                 Form {
                     TextField("Session name", text: $sessionName)
                 }
