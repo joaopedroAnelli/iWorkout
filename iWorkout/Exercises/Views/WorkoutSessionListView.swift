@@ -85,7 +85,6 @@ struct WorkoutSessionListView: View {
                             Label("Add", systemImage: "plus")
                         }
                         .disabled(newSessionName.isEmpty)
-                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -112,7 +111,6 @@ struct WorkoutSessionListView: View {
                             Label("Save", systemImage: "checkmark")
                         }
                         .disabled(editedSessionName.isEmpty)
-                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -137,7 +135,6 @@ struct WorkoutSessionListView: View {
                             Label("Save", systemImage: "checkmark")
                         }
                         .disabled(editedStyleName.isEmpty)
-                        .buttonStyle(.borderedProminent)
                     }
                 }
             }

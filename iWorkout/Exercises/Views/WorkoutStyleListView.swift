@@ -96,7 +96,6 @@ struct WorkoutStyleListView: View {
                                 Label("Save", systemImage: "checkmark")
                             }
                             .disabled(editedStyleName.isEmpty)
-                            .buttonStyle(.borderedProminent)
                         }
                     }
                 }
