@@ -65,7 +65,7 @@ struct WorkoutSessionListView: View {
             }
         }
         .sheet(isPresented: $showAddSession) {
-            NavigationView {
+            NavigationStack {
                 Form {
                     TextField("Session name", text: $newSessionName)
                 }
@@ -91,7 +91,7 @@ struct WorkoutSessionListView: View {
             }
         }
         .sheet(item: $editingSession) { session in
-            NavigationView {
+            NavigationStack {
                 Form {
                     TextField("Session name", text: $editedSessionName)
                 }
@@ -118,7 +118,7 @@ struct WorkoutSessionListView: View {
             }
         }
         .sheet(isPresented: $showEditStyle) {
-            NavigationView {
+            NavigationStack {
                 Form {
                     TextField("Style name", text: $editedStyleName)
                 }
