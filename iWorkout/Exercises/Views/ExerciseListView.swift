@@ -44,7 +44,7 @@ struct ExerciseListView: View {
                 } else {
                     ForEach($model.list) { $exercise in
                         NavigationLink(
-                            tag: exercise.id,
+                            value: exercise.id,
                             selection: $selectedExerciseId,
                             destination: { ExerciseDetailView(exercise: $exercise, model: model) }
                         ) {

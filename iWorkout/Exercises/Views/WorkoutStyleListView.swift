@@ -69,10 +69,9 @@ struct WorkoutStyleListView: View {
                                 showAddStyle = false
                                 newStyleName = ""
                             } label: {
-                                Label("Add", systemImage: "plus")
+                                Label("Add", systemImage: "checkmark")
                             }
                             .disabled(newStyleName.isEmpty)
-                            .buttonStyle(.borderedProminent)
                         }
                     }
                 }
