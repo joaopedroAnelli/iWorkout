@@ -9,7 +9,7 @@ struct WorkoutStyleListView: View {
     @State private var editedStyleName = ""
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 if model.styles.isEmpty {
                     Text("You haven't added workouts yet")
@@ -52,7 +52,7 @@ struct WorkoutStyleListView: View {
                 }
             }
             .sheet(isPresented: $showAddStyle) {
-                NavigationView {
+                NavigationStack {
                     Form {
                         TextField("Style name", text: $newStyleName)
                     }
@@ -78,7 +78,7 @@ struct WorkoutStyleListView: View {
                 }
             }
             .sheet(item: $editingStyle) { style in
-                NavigationView {
+                NavigationStack {
                     Form { TextField("Style name", text: $editedStyleName) }
                     .navigationTitle("Edit Style")
                     .toolbar {
