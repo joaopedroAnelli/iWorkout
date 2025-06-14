@@ -26,7 +26,6 @@ struct iWorkoutApp: App {
                     } label: {
                         Label(NSLocalizedString("Send", comment: ""), systemImage: "paperplane")
                     }
-                    .buttonStyle(.borderedProminent)
                     Button(role: .cancel) { } label: {
                         Label(NSLocalizedString("Cancel", comment: ""), systemImage: "xmark")
                     }
