@@ -24,19 +24,33 @@ class WorkoutStyleListViewModel: ObservableObject {
         startExpirationTimer()
     }
 
-    func addStyle(_ name: String) {
-        styles.append(WorkoutStyle(name: name))
+    func addStyle(_ name: String, isActive: Bool = false, activeUntil: Date? = nil) {
+        var newStyle = WorkoutStyle(name: name, isActive: isActive, activeUntil: activeUntil)
+        if isActive {
+            for idx in styles.indices {
+                styles[idx].isActive = false
+                styles[idx].activeUntil = nil
+            }
+        }
+        styles.append(newStyle)
     }
 
     func updateStyle(_ style: WorkoutStyle) {
-        if let index = styles.firstIndex(where: { $0.id == style.id }) {
-            styles[index] = style
+        guard let index = styles.firstIndex(where: { $0.id == style.id }) else { return }
+        var updated = styles
+        for idx in updated.indices {
+            if idx == index {
+                updated[idx] = style
+            } else if style.isActive {
+                updated[idx].isActive = false
+                updated[idx].activeUntil = nil
+            }
         }
+        styles = updated
     }
 
-    /// Activate the given style for the specified duration
-    func activateStyle(_ style: WorkoutStyle, duration: TimeInterval) {
-        let until = Date().addingTimeInterval(duration)
+    /// Activate the given style until the specified date
+    func activateStyle(_ style: WorkoutStyle, until: Date?) {
         var updated = styles
         for idx in updated.indices {
             if updated[idx].id == style.id {

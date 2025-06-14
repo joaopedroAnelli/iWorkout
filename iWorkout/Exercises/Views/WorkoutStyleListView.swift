@@ -7,8 +7,11 @@ struct WorkoutStyleListView: View {
     @State private var newStyleName = ""
     @State private var editingStyle: WorkoutStyle?
     @State private var editedStyleName = ""
-    @State private var selectingStyle: WorkoutStyle?
-    @State private var activationDuration: TimeInterval = 3600
+    @State private var editedIsActive = false
+    @State private var editedActiveUntil = Date()
+
+    @State private var newStyleIsActive = false
+    @State private var newStyleActiveUntil = Date()
 
     var body: some View {
         NavigationStack {
@@ -20,24 +23,10 @@ struct WorkoutStyleListView: View {
                 } else {
                     ForEach(model.styles.indices, id: \.self) { idx in
                         let style = model.styles[idx]
-                        HStack {
-                            NavigationLink(style.name) {
-                                WorkoutSessionListView(viewModel: WorkoutSessionViewModel(style: style) { updated in
-                                    model.updateStyle(updated)
-                                })
-                            }
-                            Toggle("", isOn: Binding<Bool>(
-                                get: { model.styles[idx].isActive },
-                                set: { newValue in
-                                    if newValue {
-                                        selectingStyle = style
-                                        activationDuration = 3600
-                                    } else {
-                                        model.deactivateStyle(style)
-                                    }
-                                })
-                            )
-                            .labelsHidden()
+                        NavigationLink(style.name) {
+                            WorkoutSessionListView(viewModel: WorkoutSessionViewModel(style: style) { updated in
+                                model.updateStyle(updated)
+                            })
                         }
                         .swipeActions {
                             Button(role: .destructive) {
@@ -51,6 +40,8 @@ struct WorkoutStyleListView: View {
                             Button {
                                 editingStyle = style
                                 editedStyleName = style.name
+                                editedIsActive = style.isActive
+                                editedActiveUntil = style.activeUntil ?? Date()
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -63,7 +54,11 @@ struct WorkoutStyleListView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
-                    Button { showAddStyle = true } label: {
+                    Button {
+                        showAddStyle = true
+                        newStyleIsActive = false
+                        newStyleActiveUntil = Date()
+                    } label: {
                         Label("Add Workout", systemImage: "plus")
                     }
                 }
@@ -72,6 +67,10 @@ struct WorkoutStyleListView: View {
                 NavigationStack {
                     Form {
                         TextField("Style name", text: $newStyleName)
+                        Toggle("Active", isOn: $newStyleIsActive)
+                        if newStyleIsActive {
+                            DatePicker("Active Until", selection: $newStyleActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
+                        }
                     }
                     .navigationTitle("New Style")
                     .toolbar {
@@ -82,9 +81,11 @@ struct WorkoutStyleListView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button {
-                                model.addStyle(newStyleName)
+                                model.addStyle(newStyleName, isActive: newStyleIsActive, activeUntil: newStyleIsActive ? newStyleActiveUntil : nil)
                                 showAddStyle = false
                                 newStyleName = ""
+                                newStyleIsActive = false
+                                newStyleActiveUntil = Date()
                             } label: {
                                 Label("Add", systemImage: "plus")
                             }
@@ -96,7 +97,13 @@ struct WorkoutStyleListView: View {
             }
             .sheet(item: $editingStyle) { style in
                 NavigationStack {
-                    Form { TextField("Style name", text: $editedStyleName) }
+                    Form {
+                        TextField("Style name", text: $editedStyleName)
+                        Toggle("Active", isOn: $editedIsActive)
+                        if editedIsActive {
+                            DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
+                        }
+                    }
                     .navigationTitle("Edit Style")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -107,38 +114,17 @@ struct WorkoutStyleListView: View {
                         ToolbarItem(placement: .confirmationAction) {
                             Button {
                                 if let idx = model.styles.firstIndex(of: style) {
-                                    model.styles[idx].name = editedStyleName
+                                    model.updateStyle(WorkoutStyle(id: style.id,
+                                                                   name: editedStyleName,
+                                                                   sessions: style.sessions,
+                                                                   isActive: editedIsActive,
+                                                                   activeUntil: editedIsActive ? editedActiveUntil : nil))
                                 }
                                 editingStyle = nil
                             } label: {
                                 Label("Save", systemImage: "checkmark")
                             }
                             .disabled(editedStyleName.isEmpty)
-                            .buttonStyle(.borderedProminent)
-                        }
-                    }
-                }
-            }
-            .sheet(item: $selectingStyle) { style in
-                NavigationStack {
-                    VStack {
-                        CountdownTimerPicker(duration: $activationDuration)
-                            .frame(height: 150)
-                    }
-                    .navigationTitle("Active Duration")
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button { selectingStyle = nil } label: {
-                                Label("Cancel", systemImage: "xmark")
-                            }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button {
-                                model.activateStyle(style, duration: activationDuration)
-                                selectingStyle = nil
-                            } label: {
-                                Label("Activate", systemImage: "checkmark")
-                            }
                             .buttonStyle(.borderedProminent)
                         }
                     }
