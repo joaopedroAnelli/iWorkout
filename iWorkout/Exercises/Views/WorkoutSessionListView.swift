@@ -49,13 +49,11 @@ struct WorkoutSessionListView: View {
         .navigationTitle(viewModel.style.name)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button {
+                Button("Edit Workout") {
                     editedStyleName = viewModel.style.name
                     editedIsActive = viewModel.style.isActive
                     editedActiveUntil = viewModel.style.activeUntil ?? Date()
                     showEditStyle = true
-                } label: {
-                    Label(NSLocalizedString("Edit Workout", comment: ""), systemImage: "pencil")
                 }
 
                 Spacer()
