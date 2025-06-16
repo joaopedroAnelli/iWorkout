@@ -38,10 +38,10 @@ struct WorkoutStyleListView: View {
                             }
                             .tint(Color("AlertCoral"))
                             Button {
-                                editingStyle = style
                                 editedStyleName = style.name
                                 editedIsActive = style.isActive
                                 editedActiveUntil = style.activeUntil ?? Date()
+                                editingStyle = style
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -55,9 +55,9 @@ struct WorkoutStyleListView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
                     Button {
-                        showAddStyle = true
                         newStyleIsActive = false
                         newStyleActiveUntil = Date()
+                        showAddStyle = true
                     } label: {
                         Label("Add Workout", systemImage: "plus")
                     }
@@ -72,7 +72,13 @@ struct WorkoutStyleListView: View {
                             DatePicker("Active Until", selection: $newStyleActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                         }
                     }
+                    .animation(.default, value: newStyleIsActive)
                     .navigationTitle("New Style")
+                    .onAppear {
+                        newStyleName = ""
+                        newStyleIsActive = false
+                        newStyleActiveUntil = Date()
+                    }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button { showAddStyle = false } label: {
@@ -103,7 +109,13 @@ struct WorkoutStyleListView: View {
                             DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                         }
                     }
+                    .animation(.default, value: editedIsActive)
                     .navigationTitle("Edit Style")
+                    .onAppear {
+                        editedStyleName = style.name
+                        editedIsActive = style.isActive
+                        editedActiveUntil = style.activeUntil ?? Date()
+                    }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button { editingStyle = nil } label: {
