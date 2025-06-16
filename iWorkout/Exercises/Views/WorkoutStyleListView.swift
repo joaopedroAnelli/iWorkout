@@ -77,17 +77,10 @@ struct WorkoutStyleListView: View {
             }
             .sheet(isPresented: $showAddStyle) {
                 NavigationStack {
-                    Form {
-                        TextField("Style name", text: $newStyleName)
-                        Picker("Transition", selection: $newStyleTransition) {
-                            ForEach(DivisionTransition.allCases) { Text($0.localized).tag($0) }
-                        }
-                        Toggle("Active", isOn: $newStyleIsActive)
-                        if newStyleIsActive {
-                            DatePicker("Active Until", selection: $newStyleActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
-                        }
-                    }
-                    .animation(.default, value: newStyleIsActive)
+                    WorkoutStyleForm(name: $newStyleName,
+                                     transition: $newStyleTransition,
+                                     isActive: $newStyleIsActive,
+                                     activeUntil: $newStyleActiveUntil)
                     .navigationTitle("New Style")
                     .onAppear {
                         newStyleName = ""
@@ -122,17 +115,10 @@ struct WorkoutStyleListView: View {
             }
             .sheet(item: $editingStyle) { style in
                 NavigationStack {
-                    Form {
-                        TextField("Style name", text: $editedStyleName)
-                        Picker("Transition", selection: $editedTransition) {
-                            ForEach(DivisionTransition.allCases) { Text($0.localized).tag($0) }
-                        }
-                        Toggle("Active", isOn: $editedIsActive)
-                        if editedIsActive {
-                            DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
-                        }
-                    }
-                    .animation(.default, value: editedIsActive)
+                    WorkoutStyleForm(name: $editedStyleName,
+                                     transition: $editedTransition,
+                                     isActive: $editedIsActive,
+                                     activeUntil: $editedActiveUntil)
                     .navigationTitle("Edit Style")
                     .onAppear {
                         editedStyleName = style.name
