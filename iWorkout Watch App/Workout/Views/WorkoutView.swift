@@ -39,6 +39,9 @@ struct WorkoutView: View {
                 }
             }
         }
+        .onDisappear {
+            viewModel.completeWorkout()
+        }
     }
 }
 

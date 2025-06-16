@@ -9,9 +9,11 @@ struct WorkoutStyleListView: View {
     @State private var editedStyleName = ""
     @State private var editedIsActive = false
     @State private var editedActiveUntil = Date()
+    @State private var editedTransition: DivisionTransition = .sequential
 
     @State private var newStyleIsActive = false
     @State private var newStyleActiveUntil = Date()
+    @State private var newStyleTransition: DivisionTransition = .sequential
 
     var body: some View {
         NavigationStack {
@@ -41,6 +43,7 @@ struct WorkoutStyleListView: View {
                                 editedStyleName = style.name
                                 editedIsActive = style.isActive
                                 editedActiveUntil = style.activeUntil ?? Date()
+                                editedTransition = style.transition
                                 editingStyle = style
                             } label: {
                                 Label("Edit", systemImage: "pencil")
@@ -67,6 +70,9 @@ struct WorkoutStyleListView: View {
                 NavigationStack {
                     Form {
                         TextField("Style name", text: $newStyleName)
+                        Picker("Transition", selection: $newStyleTransition) {
+                            ForEach(DivisionTransition.allCases) { Text($0.localized).tag($0) }
+                        }
                         Toggle("Active", isOn: $newStyleIsActive)
                         if newStyleIsActive {
                             DatePicker("Active Until", selection: $newStyleActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
@@ -78,6 +84,7 @@ struct WorkoutStyleListView: View {
                         newStyleName = ""
                         newStyleIsActive = false
                         newStyleActiveUntil = Date()
+                        newStyleTransition = .sequential
                     }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -87,9 +94,13 @@ struct WorkoutStyleListView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button {
-                                model.addStyle(newStyleName, isActive: newStyleIsActive, activeUntil: newStyleIsActive ? newStyleActiveUntil : nil)
+                                model.addStyle(newStyleName,
+                                               transition: newStyleTransition,
+                                               isActive: newStyleIsActive,
+                                               activeUntil: newStyleIsActive ? newStyleActiveUntil : nil)
                                 showAddStyle = false
                                 newStyleName = ""
+                                newStyleTransition = .sequential
                                 newStyleIsActive = false
                                 newStyleActiveUntil = Date()
                             } label: {
@@ -104,6 +115,9 @@ struct WorkoutStyleListView: View {
                 NavigationStack {
                     Form {
                         TextField("Style name", text: $editedStyleName)
+                        Picker("Transition", selection: $editedTransition) {
+                            ForEach(DivisionTransition.allCases) { Text($0.localized).tag($0) }
+                        }
                         Toggle("Active", isOn: $editedIsActive)
                         if editedIsActive {
                             DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
@@ -115,6 +129,7 @@ struct WorkoutStyleListView: View {
                         editedStyleName = style.name
                         editedIsActive = style.isActive
                         editedActiveUntil = style.activeUntil ?? Date()
+                        editedTransition = style.transition
                     }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -124,13 +139,13 @@ struct WorkoutStyleListView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button {
-                                if let idx = model.styles.firstIndex(of: style) {
-                                    model.updateStyle(WorkoutStyle(id: style.id,
-                                                                   name: editedStyleName,
-                                                                   sessions: style.sessions,
-                                                                   isActive: editedIsActive,
-                                                                   activeUntil: editedIsActive ? editedActiveUntil : nil))
-                                }
+                                model.updateStyle(WorkoutStyle(id: style.id,
+                                                               name: editedStyleName,
+                                                               sessions: style.sessions,
+                                                               transition: editedTransition,
+                                                               isActive: editedIsActive,
+                                                               activeUntil: editedIsActive ? editedActiveUntil : nil,
+                                                               currentIndex: style.currentIndex))
                                 editingStyle = nil
                             } label: {
                                 Label("Save", systemImage: "checkmark")

@@ -64,4 +64,15 @@ class WatchWorkoutViewModel: ObservableObject {
             }
         }
     }
+
+    func completeWorkout() {
+        guard shared.styles.indices.contains(styleIndex) else { return }
+        var style = shared.styles[styleIndex]
+        guard style.sessions.count > 0 else { return }
+        if style.transition == .sequential {
+            style.currentIndex = (style.currentIndex + 1) % style.sessions.count
+            shared.styles[styleIndex] = style
+            shared.sendStyles(shared.styles)
+        }
+    }
 }

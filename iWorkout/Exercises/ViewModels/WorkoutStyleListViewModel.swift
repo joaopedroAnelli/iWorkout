@@ -24,8 +24,15 @@ class WorkoutStyleListViewModel: ObservableObject {
         startExpirationTimer()
     }
 
-    func addStyle(_ name: String, isActive: Bool = false, activeUntil: Date? = nil) {
-        var newStyle = WorkoutStyle(name: name, isActive: isActive, activeUntil: activeUntil)
+    func addStyle(_ name: String,
+                  transition: DivisionTransition = .sequential,
+                  isActive: Bool = false,
+                  activeUntil: Date? = nil) {
+        var newStyle = WorkoutStyle(name: name,
+                                    sessions: [],
+                                    transition: transition,
+                                    isActive: isActive,
+                                    activeUntil: activeUntil)
         if isActive {
             for idx in styles.indices {
                 styles[idx].isActive = false

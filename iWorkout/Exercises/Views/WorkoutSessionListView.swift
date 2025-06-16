@@ -11,6 +11,8 @@ struct WorkoutSessionListView: View {
     @State private var editedActiveUntil = Date()
     @State private var editingSession: WorkoutSession?
     @State private var editedSessionName = ""
+    @State private var newSessionWeekday: Weekday = .monday
+    @State private var editedSessionWeekday: Weekday = .monday
 
     var body: some View {
         List {
@@ -36,6 +38,7 @@ struct WorkoutSessionListView: View {
                             Button {
                                 editingSession = session
                                 editedSessionName = session.name
+                                editedSessionWeekday = session.weekday ?? .monday
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -70,8 +73,17 @@ struct WorkoutSessionListView: View {
             NavigationStack {
                 Form {
                     TextField("Session name", text: $newSessionName)
+                    if viewModel.style.transition == .weekly {
+                        Picker("Weekday", selection: $newSessionWeekday) {
+                            ForEach(Weekday.allCases) { Text($0.localized).tag($0) }
+                        }
+                    }
                 }
                 .navigationTitle("New Session")
+                .onAppear {
+                    newSessionName = ""
+                    newSessionWeekday = .monday
+                }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button { showAddSession = false } label: {
@@ -80,9 +92,11 @@ struct WorkoutSessionListView: View {
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button {
-                            viewModel.addSession(newSessionName)
+                            viewModel.addSession(newSessionName,
+                                                weekday: viewModel.style.transition == .weekly ? newSessionWeekday : nil)
                             showAddSession = false
                             newSessionName = ""
+                            newSessionWeekday = .monday
                         } label: {
                             Label("Add", systemImage: "plus")
                         }
@@ -95,8 +109,17 @@ struct WorkoutSessionListView: View {
             NavigationStack {
                 Form {
                     TextField("Session name", text: $editedSessionName)
+                    if viewModel.style.transition == .weekly {
+                        Picker("Weekday", selection: $editedSessionWeekday) {
+                            ForEach(Weekday.allCases) { Text($0.localized).tag($0) }
+                        }
+                    }
                 }
                 .navigationTitle("Edit Session")
+                .onAppear {
+                    editedSessionName = session.name
+                    editedSessionWeekday = session.weekday ?? .monday
+                }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button { editingSession = nil } label: {
@@ -107,6 +130,7 @@ struct WorkoutSessionListView: View {
                         Button {
                             var updated = session
                             updated.name = editedSessionName
+                            updated.weekday = viewModel.style.transition == .weekly ? editedSessionWeekday : nil
                             viewModel.updateSession(updated)
                             editingSession = nil
                         } label: {
