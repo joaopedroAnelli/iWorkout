@@ -31,12 +31,12 @@ struct WorkoutStyleListView: View {
                             })
                         } label: {
                             HStack {
+                                Text(style.name)
                                 if style.isActive && (style.activeUntil == nil || style.activeUntil! > Date()) {
                                     Image(systemName: "circle.fill")
                                         .foregroundColor(Color("LimeGreen"))
                                         .font(.caption)
                                 }
-                                Text(style.name)
                             }
                         }
                         .swipeActions {
