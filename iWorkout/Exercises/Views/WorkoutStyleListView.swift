@@ -74,6 +74,11 @@ struct WorkoutStyleListView: View {
                     }
                     .animation(.default, value: newStyleIsActive)
                     .navigationTitle("New Style")
+                    .onAppear {
+                        newStyleName = ""
+                        newStyleIsActive = false
+                        newStyleActiveUntil = Date()
+                    }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button { showAddStyle = false } label: {
@@ -106,6 +111,11 @@ struct WorkoutStyleListView: View {
                     }
                     .animation(.default, value: editedIsActive)
                     .navigationTitle("Edit Style")
+                    .onAppear {
+                        editedStyleName = style.name
+                        editedIsActive = style.isActive
+                        editedActiveUntil = style.activeUntil ?? Date()
+                    }
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button { editingStyle = nil } label: {
