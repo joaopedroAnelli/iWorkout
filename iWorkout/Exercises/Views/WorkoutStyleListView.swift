@@ -72,6 +72,7 @@ struct WorkoutStyleListView: View {
                             DatePicker("Active Until", selection: $newStyleActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                         }
                     }
+                    .animation(.default, value: newStyleIsActive)
                     .navigationTitle("New Style")
                     .onAppear {
                         newStyleName = ""
@@ -95,7 +96,6 @@ struct WorkoutStyleListView: View {
                                 Label("Add", systemImage: "plus")
                             }
                             .disabled(newStyleName.isEmpty)
-                            .buttonStyle(.borderedProminent)
                         }
                     }
                 }
@@ -109,6 +109,7 @@ struct WorkoutStyleListView: View {
                             DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                         }
                     }
+                    .animation(.default, value: editedIsActive)
                     .navigationTitle("Edit Style")
                     .onAppear {
                         editedStyleName = style.name
@@ -134,8 +135,7 @@ struct WorkoutStyleListView: View {
                             } label: {
                                 Label("Save", systemImage: "checkmark")
                             }
-                            .disabled(editedStyleName.isEmpty)
-                            .buttonStyle(.borderedProminent)
+                              .disabled(editedStyleName.isEmpty)
                         }
                     }
                 }

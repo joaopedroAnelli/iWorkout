@@ -89,7 +89,6 @@ struct WorkoutSessionListView: View {
                             Label("Add", systemImage: "plus")
                         }
                         .disabled(newSessionName.isEmpty)
-                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -116,7 +115,6 @@ struct WorkoutSessionListView: View {
                             Label("Save", systemImage: "checkmark")
                         }
                         .disabled(editedSessionName.isEmpty)
-                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -130,6 +128,7 @@ struct WorkoutSessionListView: View {
                         DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                     }
                 }
+                .animation(.default, value: editedIsActive)
                 .navigationTitle("Edit Style")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
@@ -147,7 +146,6 @@ struct WorkoutSessionListView: View {
                             Label("Save", systemImage: "checkmark")
                         }
                         .disabled(editedStyleName.isEmpty)
-                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
