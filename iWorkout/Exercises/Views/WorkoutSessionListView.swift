@@ -7,6 +7,8 @@ struct WorkoutSessionListView: View {
     @State private var newSessionName = ""
     @State private var showEditStyle = false
     @State private var editedStyleName = ""
+    @State private var editedIsActive = false
+    @State private var editedActiveUntil = Date()
     @State private var editingSession: WorkoutSession?
     @State private var editedSessionName = ""
 
@@ -47,11 +49,11 @@ struct WorkoutSessionListView: View {
         .navigationTitle(viewModel.style.name)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button {
+                Button("Edit Workout") {
                     editedStyleName = viewModel.style.name
+                    editedIsActive = viewModel.style.isActive
+                    editedActiveUntil = viewModel.style.activeUntil ?? Date()
                     showEditStyle = true
-                } label: {
-                    Label(NSLocalizedString("Edit Workout", comment: ""), systemImage: "pencil")
                 }
 
                 Spacer()
@@ -119,7 +121,12 @@ struct WorkoutSessionListView: View {
             NavigationStack {
                 Form {
                     TextField("Style name", text: $editedStyleName)
+                    Toggle("Active", isOn: $editedIsActive)
+                    if editedIsActive {
+                        DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
+                    }
                 }
+                .animation(.default, value: editedIsActive)
                 .navigationTitle("Edit Style")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
@@ -130,6 +137,8 @@ struct WorkoutSessionListView: View {
                     ToolbarItem(placement: .confirmationAction) {
                         Button {
                             viewModel.style.name = editedStyleName
+                            viewModel.style.isActive = editedIsActive
+                            viewModel.style.activeUntil = editedIsActive ? editedActiveUntil : nil
                             showEditStyle = false
                         } label: {
                             Label("Save", systemImage: "checkmark")

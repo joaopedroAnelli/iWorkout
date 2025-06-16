@@ -31,11 +31,9 @@ struct ExerciseListView: View {
                             })
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button {
+                Button("Edit Session") {
                     sessionName = model.session.name
                     showEditSession = true
-                } label: {
-                    Label("Edit Session", systemImage: "pencil")
                 }
                 Spacer()
                 Button { showAddExercise = true } label: {
