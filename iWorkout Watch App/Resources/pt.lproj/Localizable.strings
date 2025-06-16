@@ -24,3 +24,14 @@
 "Workouts" = "Treinos";
 "Add Workout" = "Adicionar Treino";
 "Active" = "Ativo";
+"Transition" = "Transição";
+"Weekly" = "Semanal";
+"Sequential" = "Sequencial";
+"Weekday" = "Dia da semana";
+"Monday" = "Segunda";
+"Tuesday" = "Terça";
+"Wednesday" = "Quarta";
+"Thursday" = "Quinta";
+"Friday" = "Sexta";
+"Saturday" = "Sábado";
+"Sunday" = "Domingo";

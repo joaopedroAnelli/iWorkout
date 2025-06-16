@@ -17,8 +17,8 @@ class WorkoutSessionViewModel: ObservableObject {
         set { style.sessions = newValue }
     }
 
-    func addSession(_ name: String) {
-        style.sessions.append(WorkoutSession(name: name))
+    func addSession(_ name: String, weekday: Weekday? = nil) {
+        style.sessions.append(WorkoutSession(name: name, weekday: weekday))
     }
 
     func updateSession(_ session: WorkoutSession) {

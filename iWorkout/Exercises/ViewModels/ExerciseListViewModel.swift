@@ -24,7 +24,8 @@ class ExerciseListViewModel: ObservableObject {
     convenience init() {
         let model = WorkoutStyleListViewModel()
         if model.styles.isEmpty {
-            let defaultStyle = WorkoutStyle(name: "Default", sessions: [WorkoutSession(name: "Session")])
+            let defaultStyle = WorkoutStyle(name: "Default",
+                                           sessions: [WorkoutSession(name: "Session")])
             model.styles = [defaultStyle]
         }
         self.init(session: model.styles[0].sessions[0]) { updated in
