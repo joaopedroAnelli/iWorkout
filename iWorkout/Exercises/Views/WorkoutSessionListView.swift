@@ -24,7 +24,8 @@ struct WorkoutSessionListView: View {
                 } else {
                     ForEach(viewModel.sessions) { session in
                         NavigationLink(session.name) {
-                            ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
+                            ExerciseListView(model: ExerciseListViewModel(session: session,
+                                                                       transition: viewModel.style.transition) { updated in
                                 viewModel.updateSession(updated)
                             })
                         }

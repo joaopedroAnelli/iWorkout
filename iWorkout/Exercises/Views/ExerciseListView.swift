@@ -55,11 +55,11 @@ struct ExerciseListView: View {
             WorkoutSessionForm(titleKey: "Edit Session",
                                name: $sessionName,
                                weekday: $sessionWeekday,
-                               showWeekday: model.session.weekday != nil,
+                               showWeekday: model.showsWeekday,
                                onCancel: { showEditSession = false },
                                onSave: {
                                    model.session.name = sessionName
-                                   if model.session.weekday != nil {
+                                   if model.showsWeekday {
                                        model.session.weekday = sessionWeekday
                                    }
                                    showEditSession = false
