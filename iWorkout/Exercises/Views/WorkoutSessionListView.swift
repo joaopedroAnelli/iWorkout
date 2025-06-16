@@ -9,6 +9,7 @@ struct WorkoutSessionListView: View {
     @State private var editedStyleName = ""
     @State private var editedIsActive = false
     @State private var editedActiveUntil = Date()
+    @State private var editedTransition: DivisionTransition = .sequential
     @State private var editingSession: WorkoutSession?
     @State private var editedSessionName = ""
     @State private var newSessionWeekday: Weekday = .monday
@@ -56,6 +57,7 @@ struct WorkoutSessionListView: View {
                     editedStyleName = viewModel.style.name
                     editedIsActive = viewModel.style.isActive
                     editedActiveUntil = viewModel.style.activeUntil ?? Date()
+                    editedTransition = viewModel.style.transition
                     showEditStyle = true
                 }
 
@@ -143,14 +145,10 @@ struct WorkoutSessionListView: View {
         }
         .sheet(isPresented: $showEditStyle) {
             NavigationStack {
-                Form {
-                    TextField("Style name", text: $editedStyleName)
-                    Toggle("Active", isOn: $editedIsActive)
-                    if editedIsActive {
-                        DatePicker("Active Until", selection: $editedActiveUntil, in: Date()..., displayedComponents: [.date, .hourAndMinute])
-                    }
-                }
-                .animation(.default, value: editedIsActive)
+                WorkoutStyleForm(name: $editedStyleName,
+                                 transition: $editedTransition,
+                                 isActive: $editedIsActive,
+                                 activeUntil: $editedActiveUntil)
                 .navigationTitle("Edit Style")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
@@ -161,6 +159,7 @@ struct WorkoutSessionListView: View {
                     ToolbarItem(placement: .confirmationAction) {
                         Button {
                             viewModel.style.name = editedStyleName
+                            viewModel.style.transition = editedTransition
                             viewModel.style.isActive = editedIsActive
                             viewModel.style.activeUntil = editedIsActive ? editedActiveUntil : nil
                             showEditStyle = false
