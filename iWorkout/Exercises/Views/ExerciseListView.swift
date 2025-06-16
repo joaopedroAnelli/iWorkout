@@ -186,7 +186,6 @@ private struct AddExerciseSheet: View {
                         Label("Add", systemImage: "plus")
                     }
                     .disabled(name.isEmpty)
-                    .buttonStyle(.borderedProminent)
                 }
             }
         }
@@ -217,7 +216,6 @@ private struct EditSessionSheet: View {
                         Label("Save", systemImage: "checkmark")
                     }
                     .disabled(name.isEmpty)
-                    .buttonStyle(.borderedProminent)
                 }
             }
         }
