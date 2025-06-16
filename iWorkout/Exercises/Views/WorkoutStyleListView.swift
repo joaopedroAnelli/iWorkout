@@ -25,10 +25,19 @@ struct WorkoutStyleListView: View {
                 } else {
                     ForEach(model.styles.indices, id: \.self) { idx in
                         let style = model.styles[idx]
-                        NavigationLink(style.name) {
+                        NavigationLink {
                             WorkoutSessionListView(viewModel: WorkoutSessionViewModel(style: style) { updated in
                                 model.updateStyle(updated)
                             })
+                        } label: {
+                            HStack {
+                                if style.isActive && (style.activeUntil == nil || style.activeUntil! > Date()) {
+                                    Image(systemName: "circle.fill")
+                                        .foregroundColor(Color("LimeGreen"))
+                                        .font(.caption)
+                                }
+                                Text(style.name)
+                            }
                         }
                         .swipeActions {
                             Button(role: .destructive) {
