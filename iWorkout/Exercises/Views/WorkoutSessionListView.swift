@@ -25,7 +25,8 @@ struct WorkoutSessionListView: View {
                 } else {
                     ForEach(viewModel.sessions) { session in
                         NavigationLink(session.name) {
-                            ExerciseListView(model: ExerciseListViewModel(session: session) { updated in
+                            ExerciseListView(model: ExerciseListViewModel(session: session,
+                                                                       transition: viewModel.style.transition) { updated in
                                 viewModel.updateSession(updated)
                             })
                         }
@@ -108,39 +109,21 @@ struct WorkoutSessionListView: View {
             }
         }
         .sheet(item: $editingSession) { session in
-            NavigationStack {
-                Form {
-                    TextField("Session name", text: $editedSessionName)
-                    if viewModel.style.transition == .weekly {
-                        Picker("Weekday", selection: $editedSessionWeekday) {
-                            ForEach(Weekday.allCases) { Text($0.localized).tag($0) }
-                        }
-                    }
-                }
-                .navigationTitle("Edit Session")
-                .onAppear {
-                    editedSessionName = session.name
-                    editedSessionWeekday = session.weekday ?? .monday
-                }
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button { editingSession = nil } label: {
-                            Label("Cancel", systemImage: "xmark")
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button {
-                            var updated = session
-                            updated.name = editedSessionName
-                            updated.weekday = viewModel.style.transition == .weekly ? editedSessionWeekday : nil
-                            viewModel.updateSession(updated)
-                            editingSession = nil
-                        } label: {
-                            Label("Save", systemImage: "checkmark")
-                        }
-                        .disabled(editedSessionName.isEmpty)
-                    }
-                }
+            WorkoutSessionForm(titleKey: "Edit Session",
+                               name: $editedSessionName,
+                               weekday: $editedSessionWeekday,
+                               showWeekday: viewModel.style.transition == .weekly,
+                               onCancel: { editingSession = nil },
+                               onSave: {
+                                   var updated = session
+                                   updated.name = editedSessionName
+                                   updated.weekday = viewModel.style.transition == .weekly ? editedSessionWeekday : nil
+                                   viewModel.updateSession(updated)
+                                   editingSession = nil
+                               })
+            .onAppear {
+                editedSessionName = session.name
+                editedSessionWeekday = session.weekday ?? .monday
             }
         }
         .sheet(isPresented: $showEditStyle) {

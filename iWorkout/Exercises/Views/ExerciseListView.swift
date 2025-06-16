@@ -10,6 +10,7 @@ import SwiftUI
 struct ExerciseListView: View {
     @StateObject var model: ExerciseListViewModel
     @State private var sessionName = ""
+    @State private var sessionWeekday: Weekday = .monday
     @State private var showEditSession = false
     @State private var exerciseToDelete: Exercise?
     @State private var showDeleteConfirm = false
@@ -33,6 +34,7 @@ struct ExerciseListView: View {
             ToolbarItemGroup(placement: .bottomBar) {
                 Button("Edit Session") {
                     sessionName = model.session.name
+                    sessionWeekday = model.session.weekday ?? .monday
                     showEditSession = true
                 }
                 Spacer()
@@ -50,9 +52,18 @@ struct ExerciseListView: View {
                              isPresented: $showAddExercise)
         }
         .sheet(isPresented: $showEditSession) {
-            EditSessionSheet(model: model,
-                             name: $sessionName,
-                             isPresented: $showEditSession)
+            WorkoutSessionForm(titleKey: "Edit Session",
+                               name: $sessionName,
+                               weekday: $sessionWeekday,
+                               showWeekday: model.showsWeekday,
+                               onCancel: { showEditSession = false },
+                               onSave: {
+                                   model.session.name = sessionName
+                                   if model.showsWeekday {
+                                       model.session.weekday = sessionWeekday
+                                   }
+                                   showEditSession = false
+                               })
         }
         .navigationTitle(model.session.name)
         .onChange(of: selectedExerciseId) { newValue in
@@ -190,32 +201,3 @@ private struct AddExerciseSheet: View {
     }
 }
 
-/// Sheet used to edit the workout session name
-private struct EditSessionSheet: View {
-    @ObservedObject var model: ExerciseListViewModel
-    @Binding var name: String
-    @Binding var isPresented: Bool
-
-    var body: some View {
-        NavigationStack {
-            Form { TextField("Session name", text: $name) }
-            .navigationTitle("Edit Session")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button { isPresented = false } label: {
-                        Label("Cancel", systemImage: "xmark")
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        model.session.name = name
-                        isPresented = false
-                    } label: {
-                        Label("Save", systemImage: "checkmark")
-                    }
-                    .disabled(name.isEmpty)
-                }
-            }
-        }
-    }
-}

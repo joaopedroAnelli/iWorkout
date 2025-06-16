@@ -4,6 +4,7 @@ class ExerciseListViewModel: ObservableObject {
     private var styleModel: WorkoutStyleListViewModel?
     private var styleIndex: Int = 0
     private var sessionIndex: Int = 0
+    private let transition: DivisionTransition
     @Published var session: WorkoutSession {
         didSet { dirty = true }
     }
@@ -16,8 +17,13 @@ class ExerciseListViewModel: ObservableObject {
         set { session.exercises = newValue }
     }
 
-    init(session: WorkoutSession, onUpdate: @escaping (WorkoutSession) -> Void) {
+    var showsWeekday: Bool { transition == .weekly }
+
+    init(session: WorkoutSession,
+         transition: DivisionTransition,
+         onUpdate: @escaping (WorkoutSession) -> Void) {
         self.session = session
+        self.transition = transition
         self.onUpdate = onUpdate
     }
 
@@ -28,7 +34,9 @@ class ExerciseListViewModel: ObservableObject {
                                            sessions: [WorkoutSession(name: "Session")])
             model.styles = [defaultStyle]
         }
-        self.init(session: model.styles[0].sessions[0]) { updated in
+        let style = model.styles[0]
+        self.init(session: style.sessions[0],
+                  transition: style.transition) { updated in
             var style = model.styles[0]
             if style.sessions.isEmpty {
                 style.sessions = [updated]
