@@ -34,9 +34,10 @@
 "Active Until" = "Active Until";
 "Active" = "Active";
 "New Style" = "New Style";
-"Transition" = "Transition";
-"Weekly" = "Weekly";
-"Sequential" = "Sequential";
+"Session Progression" = "Session Progression";
+"Fixed to Weekdays" = "Fixed to Weekdays";
+"One After Another" = "One After Another";
+"Session Progression Help" = "How sessions progress:\nChoose how the app should determine your next workout.\n• One After Another: Moves to the next session after completion.\n• Fixed to Weekdays: Each session is tied to a specific day (e.g., Leg Day on Monday).";
 "Weekday" = "Weekday";
 "Monday" = "Monday";
 "Tuesday" = "Tuesday";
