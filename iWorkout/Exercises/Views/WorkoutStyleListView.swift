@@ -140,7 +140,7 @@ struct WorkoutStyleListView: View {
                                                                transition: editedTransition,
                                                                isActive: editedIsActive,
                                                                activeUntil: editedIsActive ? editedActiveUntil : nil,
-                                                               currentIndex: style.currentIndex))
+                                                               lastCompletedSessionId: style.lastCompletedSessionId))
                                 editingStyle = nil
                             } label: {
                                 Label("Save", systemImage: "checkmark")

@@ -33,8 +33,11 @@ struct SessionListView: View {
                     selection = idx
                 }
             case .sequential:
-                if style.sessions.indices.contains(style.currentIndex) {
-                    selection = style.currentIndex
+                if let lastId = style.lastCompletedSessionId,
+                   let idx = style.sessions.firstIndex(where: { $0.id == lastId }) {
+                    selection = (idx + 1) % style.sessions.count
+                } else if !style.sessions.isEmpty {
+                    selection = 0
                 }
             }
         }
