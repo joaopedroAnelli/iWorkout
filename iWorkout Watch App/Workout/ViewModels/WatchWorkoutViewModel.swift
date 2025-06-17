@@ -68,9 +68,9 @@ class WatchWorkoutViewModel: ObservableObject {
     func completeWorkout() {
         guard shared.styles.indices.contains(styleIndex) else { return }
         var style = shared.styles[styleIndex]
-        guard style.sessions.count > 0 else { return }
+        guard style.sessions.indices.contains(sessionIndex) else { return }
         if style.transition == .sequential {
-            style.currentIndex = (style.currentIndex + 1) % style.sessions.count
+            style.lastCompletedSessionId = style.sessions[sessionIndex].id
             shared.styles[styleIndex] = style
             shared.sendStyles(shared.styles)
         }

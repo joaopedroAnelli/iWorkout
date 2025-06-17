@@ -1,8 +1,10 @@
 import Foundation
+import Combine
 
 class WorkoutStyleListViewModel: ObservableObject {
     private static let storageKey = "workoutStyles"
     private var expirationTimer: Timer?
+    private var syncCancellable: AnyCancellable?
 
     @Published var styles: [WorkoutStyle] = [] {
         didSet {
@@ -22,6 +24,12 @@ class WorkoutStyleListViewModel: ObservableObject {
     init() {
         load()
         startExpirationTimer()
+        syncCancellable = SharedData.shared.$styles.sink { [weak self] incoming in
+            guard let self = self else { return }
+            if self.styles != incoming {
+                self.styles = incoming
+            }
+        }
     }
 
     func addStyle(_ name: String,
@@ -32,7 +40,8 @@ class WorkoutStyleListViewModel: ObservableObject {
                                     sessions: [],
                                     transition: transition,
                                     isActive: isActive,
-                                    activeUntil: activeUntil)
+                                    activeUntil: activeUntil,
+                                    lastCompletedSessionId: nil)
         if isActive {
             for idx in styles.indices {
                 styles[idx].isActive = false

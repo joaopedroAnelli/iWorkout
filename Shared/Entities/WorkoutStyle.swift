@@ -10,6 +10,8 @@ struct WorkoutStyle: Identifiable, Codable, Equatable {
     var isActive: Bool
     /// Time when the style should automatically deactivate
     var activeUntil: Date?
+    /// Identifier of the last completed session when transitioning sequentially
+    var lastCompletedSessionId: UUID?
 
     init(id: UUID = UUID(),
          name: String,
@@ -17,18 +19,18 @@ struct WorkoutStyle: Identifiable, Codable, Equatable {
          transition: DivisionTransition = .sequential,
          isActive: Bool = false,
          activeUntil: Date? = nil,
-         currentIndex: Int = 0) {
+         lastCompletedSessionId: UUID? = nil) {
         self.id = id
         self.name = name
         self.sessions = sessions
         self.transition = transition
         self.isActive = isActive
         self.activeUntil = activeUntil
-        self.currentIndex = currentIndex
+        self.lastCompletedSessionId = lastCompletedSessionId
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, sessions, transition, isActive, activeUntil, currentIndex
+        case id, name, sessions, transition, isActive, activeUntil, lastCompletedSessionId
     }
 
     init(from decoder: Decoder) throws {
@@ -39,9 +41,7 @@ struct WorkoutStyle: Identifiable, Codable, Equatable {
         transition = try container.decodeIfPresent(DivisionTransition.self, forKey: .transition) ?? .sequential
         isActive = try container.decodeIfPresent(Bool.self, forKey: .isActive) ?? false
         activeUntil = try container.decodeIfPresent(Date.self, forKey: .activeUntil)
-        currentIndex = try container.decodeIfPresent(Int.self, forKey: .currentIndex) ?? 0
+        lastCompletedSessionId = try container.decodeIfPresent(UUID.self, forKey: .lastCompletedSessionId)
     }
 
-    /// Index for sequential transition
-    var currentIndex: Int
 }
