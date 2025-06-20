@@ -22,7 +22,7 @@
 "Sessions" = "Divisões";
 "Workouts" = "Treinos";
 "Edit Style" = "Editar Treino";
-"Edit Session" = "Editar Sessão";
+"Edit Session" = "Editar Divisão";
 "New Exercise" = "Novo Exercício";
 "Send to Apple Watch?" = "Enviar para o Apple Watch?";
 "Send" = "Enviar";
@@ -35,10 +35,11 @@
 "Active Until" = "Ativo até";
 "Active" = "Ativo";
 "New Style" = "Novo Treino";
-"Session Progression" = "Progressão das Sessões";
+"About Sessions" = "Sobre as Divisões";
+"Session Progression" = "Progressão";
 "Fixed to Weekdays" = "Fixado aos Dias da Semana";
 "One After Another" = "Uma Após a Outra";
-"Session Progression Help" = "Como as sessões progridem:\nEscolha como o app deve determinar seu próximo treino.\n• Uma Após a Outra: Avança para a próxima sessão após concluir.\n• Fixado aos Dias da Semana: Cada sessão é vinculada a um dia específico (ex.: Treino de pernas na segunda-feira).";
+"Session Progression Help" = "Como as divisões progridem:\nEscolha como o app deve determinar seu próximo treino.\n• Uma Após a Outra: Avança para a próxima divisão após concluir.\n• Fixado aos Dias da Semana: Cada divisão é vinculada a um dia específico (ex.: Treino de pernas na segunda-feira).";
 "Weekday" = "Dia da semana";
 "Monday" = "Segunda";
 "Tuesday" = "Terça";
