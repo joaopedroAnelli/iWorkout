@@ -53,7 +53,7 @@ struct WorkoutSessionListView: View {
         }
         .navigationTitle(viewModel.style.name)
         .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
+            ToolbarItemGroup {
                 Button("Edit Workout") {
                     editedStyleName = viewModel.style.name
                     editedIsActive = viewModel.style.isActive
@@ -61,7 +61,8 @@ struct WorkoutSessionListView: View {
                     editedTransition = viewModel.style.transition
                     showEditStyle = true
                 }
-
+            }
+            ToolbarItemGroup(placement: .bottomBar) {
                 Spacer()
 
                 Button {
@@ -101,7 +102,7 @@ struct WorkoutSessionListView: View {
                             newSessionName = ""
                             newSessionWeekday = .monday
                         } label: {
-                            Label("Add", systemImage: "plus")
+                            Label("Add", systemImage: "checkmark")
                         }
                         .disabled(newSessionName.isEmpty)
                     }

@@ -31,15 +31,17 @@ struct ExerciseListView: View {
                                 selectedExerciseId = id
                             })
         .toolbar {
-            ToolbarItemGroup(placement: .bottomBar) {
+            ToolbarItemGroup {
                 Button("Edit Session") {
                     sessionName = model.session.name
                     sessionWeekday = model.session.weekday ?? .monday
                     showEditSession = true
                 }
+            }
+            ToolbarItemGroup(placement: .bottomBar) {
                 Spacer()
                 Button { showAddExercise = true } label: {
-                    Label("Add Exercise", systemImage: "plus")
+                    Label("Add Exercise", systemImage: "checkmark")
                 }
                 .bold()
             }
