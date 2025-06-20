@@ -24,9 +24,10 @@
 "Workouts" = "Treinos";
 "Add Workout" = "Adicionar Treino";
 "Active" = "Ativo";
-"Transition" = "Transição";
-"Weekly" = "Semanal";
-"Sequential" = "Sequencial";
+"Session Progression" = "Progressão das Sessões";
+"Fixed to Weekdays" = "Fixado aos Dias da Semana";
+"One After Another" = "Uma Após a Outra";
+"Session Progression Help" = "Como as sessões progridem:\nEscolha como o app deve determinar seu próximo treino.\n• Uma Após a Outra: Avança para a próxima sessão após concluir.\n• Fixado aos Dias da Semana: Cada sessão é vinculada a um dia específico (ex.: Treino de pernas na segunda-feira).";
 "Weekday" = "Dia da semana";
 "Monday" = "Segunda";
 "Tuesday" = "Terça";

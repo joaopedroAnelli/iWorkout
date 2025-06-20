@@ -9,9 +9,9 @@ enum DivisionTransition: String, Codable, CaseIterable, Identifiable {
     var localized: String {
         switch self {
         case .weekly:
-            return NSLocalizedString("Weekly", comment: "")
+            return NSLocalizedString("Fixed to Weekdays", comment: "")
         case .sequential:
-            return NSLocalizedString("Sequential", comment: "")
+            return NSLocalizedString("One After Another", comment: "")
         }
     }
 }
