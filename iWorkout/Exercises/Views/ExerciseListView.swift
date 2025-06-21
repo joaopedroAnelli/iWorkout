@@ -41,7 +41,7 @@ struct ExerciseListView: View {
             ToolbarItemGroup(placement: .bottomBar) {
                 Spacer()
                 Button { showAddExercise = true } label: {
-                    Label("Add Exercise", systemImage: "checkmark")
+                    Label("Add Exercise", systemImage: "plus")
                 }
                 .bold()
             }
@@ -194,7 +194,7 @@ private struct AddExerciseSheet: View {
                         sets = 3
                         rest = 60
                     } label: {
-                        Label("Add", systemImage: "plus")
+                        Label("Add", systemImage: "checkmark")
                     }
                     .disabled(name.isEmpty)
                 }
